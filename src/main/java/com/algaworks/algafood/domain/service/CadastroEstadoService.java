@@ -38,7 +38,7 @@ public class CadastroEstadoService {
 	
 	public Estado buscarOuFalhar(Long id) {
 		return estadoRepository.findById(id).
-				orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(ESTADO_DE_CÓDIGO_NÃO_PODE_SER_REMOVIDO_POIS_ESTÁ_EM_USO, id)));
+				orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(NÃO_EXISTE_UM_CADASTRO_DE_ESTADO_COM_CÓDIGO, id)));
 	}
 	
 }

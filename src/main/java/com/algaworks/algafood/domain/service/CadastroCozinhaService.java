@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Cozinha;
+import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 
 @Service
@@ -29,7 +30,6 @@ public class CadastroCozinhaService {
 	public void excluir(Long cozinhaId) {
 		try {
 			cozinhaRepository.deleteById(cozinhaId);
-			
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntidadeNaoEncontradaException(
 				String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId));
@@ -46,4 +46,15 @@ public class CadastroCozinhaService {
 					String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId)));
 	}
 	
+	public Cozinha buscarOuFalhar(Restaurante restaurante) {
+		Cozinha cozinha= restaurante.getCozinha();
+		if(cozinha != null) {
+			Long id =cozinha.getId();
+			if(id != null) {
+				return cozinhaRepository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException(
+						String.format(MSG_COZINHA_NAO_ENCONTRADA, id)));
+			}
+		}
+		return new Cozinha();
+	}
 }

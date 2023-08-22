@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
+import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -31,6 +34,9 @@ public class RestauranteController {
 	@Autowired
 	private CadastroRestauranteService cadastroRestaurante;
 	
+	@Autowired
+	private CadastroCozinhaService cadastroCozinhaService;
+	
 	@GetMapping
 	public List<Restaurante> listar() {
 		return restauranteRepository.findAll();
@@ -43,14 +49,25 @@ public class RestauranteController {
 	
 	@PostMapping
 	public Restaurante adicionar(@RequestBody Restaurante restaurante) {
+		try {
+			cadastroRestaurante.buscarOuFalharCozinha(restaurante);
+		} catch (Exception e) {
+			throw new NegocioException(e.getMessage());
+		}
 		return cadastroRestaurante.salvar(restaurante);
 	}
 	
 	@PutMapping("/{restauranteId}")
 	public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
+		try {
+			cadastroRestaurante.buscarOuFalharCozinha(restaurante);
+		} catch (Exception e) {
+			throw new NegocioException(e.getMessage());
+		}
 		Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
 		BeanUtils.copyProperties(restaurante, restauranteAtual, 
 				"id", "formasPagamento", "endereco", "dataCadastro", "produtos");
+		
 		return cadastroRestaurante.salvar(restauranteAtual);
 	}
 	
@@ -64,6 +81,11 @@ public class RestauranteController {
 	private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {
 		ObjectMapper objectMapper = new ObjectMapper();
 		Restaurante restauranteOrigem = objectMapper.convertValue(dadosOrigem, Restaurante.class);
+		try {
+			cadastroCozinhaService.buscarOuFalhar(restauranteOrigem);
+		} catch (EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 		dadosOrigem.forEach((nomePropriedade, valorPropriedade) -> {
 			Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);
 			field.setAccessible(true);
