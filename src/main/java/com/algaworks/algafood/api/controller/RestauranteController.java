@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
@@ -51,8 +51,8 @@ public class RestauranteController {
 	public Restaurante adicionar(@RequestBody Restaurante restaurante) {
 		try {
 			cadastroRestaurante.buscarOuFalharCozinha(restaurante);
-		} catch (Exception e) {
-			throw new NegocioException(e.getMessage());
+		} catch (CozinhaNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage(), e);
 		}
 		return cadastroRestaurante.salvar(restaurante);
 	}
@@ -61,7 +61,7 @@ public class RestauranteController {
 	public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
 		try {
 			cadastroRestaurante.buscarOuFalharCozinha(restaurante);
-		} catch (Exception e) {
+		} catch (CozinhaNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
 		Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
@@ -83,8 +83,8 @@ public class RestauranteController {
 		Restaurante restauranteOrigem = objectMapper.convertValue(dadosOrigem, Restaurante.class);
 		try {
 			cadastroCozinhaService.buscarOuFalhar(restauranteOrigem);
-		} catch (EntidadeNaoEncontradaException e) {
-			throw new NegocioException(e.getMessage());
+		} catch (CozinhaNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage(), e);
 		}
 		dadosOrigem.forEach((nomePropriedade, valorPropriedade) -> {
 			Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);

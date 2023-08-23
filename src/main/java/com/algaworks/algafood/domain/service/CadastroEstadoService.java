@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.repository.EstadoRepository;
 
@@ -27,18 +28,18 @@ public class CadastroEstadoService {
 		try {
 			estadoRepository.deleteById(estadoId);
 		} catch (EmptyResultDataAccessException exception) {
-			throw new EntidadeNaoEncontradaException(
-				String.format(NÃO_EXISTE_UM_CADASTRO_DE_ESTADO_COM_CÓDIGO, estadoId));
+			throw new EstadoNaoEncontradoException(
+				String.format(NÃO_EXISTE_UM_CADASTRO_DE_ESTADO_COM_CÓDIGO, estadoId), exception);
 		
 		} catch (DataIntegrityViolationException exception) {
 			throw new EntidadeEmUsoException(
-				String.format(ESTADO_DE_CÓDIGO_NÃO_PODE_SER_REMOVIDO_POIS_ESTÁ_EM_USO, estadoId));
+				String.format(ESTADO_DE_CÓDIGO_NÃO_PODE_SER_REMOVIDO_POIS_ESTÁ_EM_USO, estadoId, exception));
 		}
 	}
 	
 	public Estado buscarOuFalhar(Long id) {
 		return estadoRepository.findById(id).
-				orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(NÃO_EXISTE_UM_CADASTRO_DE_ESTADO_COM_CÓDIGO, id)));
+				orElseThrow(() -> new EstadoNaoEncontradoException(String.format(NÃO_EXISTE_UM_CADASTRO_DE_ESTADO_COM_CÓDIGO, id)));
 	}
 	
 }

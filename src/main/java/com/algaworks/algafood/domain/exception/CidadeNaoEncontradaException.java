@@ -3,16 +3,16 @@ package com.algaworks.algafood.domain.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.CONFLICT)
-public class EntidadeEmUsoException extends NegocioException {
+@ResponseStatus(value = HttpStatus.NOT_FOUND)
+public class CidadeNaoEncontradaException extends NegocioException {
 
 	private static final long serialVersionUID = 1L;
 
-	public EntidadeEmUsoException(String mensagem) {
+	public CidadeNaoEncontradaException(String mensagem) {
 		super(mensagem);
 	}
 	
-	public EntidadeEmUsoException(String mensagem, Throwable causa) {
+	public CidadeNaoEncontradaException(String mensagem, Throwable causa) {
 		super(mensagem, causa);
 	}
 }
