@@ -2,10 +2,13 @@ package com.algaworks.algafood.api.exceptionhandler;
 
 import java.time.LocalDateTime;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.algaworks.algafood.domain.exception.CidadeNaoEncontradaException;
@@ -17,60 +20,61 @@ import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradoException;
 
 @ControllerAdvice
-public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
+public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(EntidadeNaoEncontradaException.class)
-  public ResponseEntity<?> tratarEntidadeNaoEncontrada(EntidadeNaoEncontradaException e) {
-
-    Problema problema = obterMensagemDoProblema(e);
-
-    // vai retornar o toString de problema??
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problema);
-
+  public ResponseEntity<?> tratarEntidadeNaoEncontrada(EntidadeNaoEncontradaException e, WebRequest request) {
+    return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
   }
 
   @ExceptionHandler(NegocioException.class)
-  public ResponseEntity<?> tratarNegocioException(NegocioException e){
-    Problema problema = obterMensagemDoProblema(e);
-
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problema);
+  public ResponseEntity<?> tratarNegocioException(NegocioException e, WebRequest request) {
+    return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
   }
 
   @ExceptionHandler(CidadeNaoEncontradaException.class)
-  public ResponseEntity<?> tratarCidadeNaoEncontrada(CidadeNaoEncontradaException e) {
-    Problema problema = obterMensagemDoProblema(e);
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problema);
+  public ResponseEntity<?> tratarCidadeNaoEncontrada(CidadeNaoEncontradaException e, WebRequest request) {
+    return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
   }
 
   @ExceptionHandler(CozinhaNaoEncontradaException.class)
-  public ResponseEntity<?> tratarCozinhaNaoEncontradaException(CozinhaNaoEncontradaException e) {
-    Problema problema = obterMensagemDoProblema(e);
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problema);
+  public ResponseEntity<?> tratarCozinhaNaoEncontradaException(CozinhaNaoEncontradaException e, WebRequest request) {
+    return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
   }
 
   @ExceptionHandler(EntidadeEmUsoException.class)
-  public ResponseEntity<?> tratarEntidadeEmUsoException(EntidadeEmUsoException e) {
-    Problema problema = obterMensagemDoProblema(e);
-    return ResponseEntity.status(HttpStatus.CONFLICT).body(problema);
+  public ResponseEntity<?> tratarEntidadeEmUsoException(EntidadeEmUsoException e, WebRequest request) {
+    return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request);
   }
 
   @ExceptionHandler(EstadoNaoEncontradoException.class)
-  public ResponseEntity<?> tratarEstadoNaoEncontradoException(EstadoNaoEncontradoException e) {
-    Problema problema = obterMensagemDoProblema(e);
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problema);
+  public ResponseEntity<?> tratarEstadoNaoEncontradoException(EstadoNaoEncontradoException e, WebRequest request) {
+    return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
   }
 
   @ExceptionHandler(RestauranteNaoEncontradoException.class)
-  public ResponseEntity<?> tratarRestauranteNaoEncontradoException(RestauranteNaoEncontradoException e) {
-    Problema problema = obterMensagemDoProblema(e);
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problema);
+  public ResponseEntity<?> tratarRestauranteNaoEncontradoException(RestauranteNaoEncontradoException e,
+      WebRequest request) {
+    return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
   }
 
-  private Problema obterMensagemDoProblema(Exception e) {
-    Problema problema = Problema.builder()
-        .dataErro(LocalDateTime.now())
-        .menssagem(e.getMessage())
-        .build();
-    return problema;
+  @Override
+  protected ResponseEntity<Object> handleExceptionInternal(Exception ex, @Nullable Object body, HttpHeaders headers,
+      HttpStatus status, WebRequest request) {
+
+    if (body == null) {
+      body = Problema.builder()
+          .dataErro(LocalDateTime.now())
+          .menssagem(status.getReasonPhrase())
+          .build();
+    } else if (body instanceof String) {
+      body = Problema.builder()
+          .dataErro(LocalDateTime.now())
+          .menssagem((String) body)
+          .build();
+    }
+
+    return super.handleExceptionInternal(ex, body, headers, status, request);
   }
+
 }
