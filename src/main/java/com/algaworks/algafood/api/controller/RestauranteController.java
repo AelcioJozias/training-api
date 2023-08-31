@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.BeanUtils;
@@ -29,7 +28,6 @@ import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 
 @RestController
 @RequestMapping(value = "/restaurantes")
