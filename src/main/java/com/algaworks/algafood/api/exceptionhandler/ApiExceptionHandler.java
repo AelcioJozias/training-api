@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
@@ -36,6 +37,15 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
           (MethodArgumentTypeMismatchException) ex, headers, status, request);
     }
     return handleExceptionInternal(ex, null, headers, status, request);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,
+      HttpStatus status, WebRequest request) {
+    String url = String.format("O recurso '%s, que você tentou acessar, é inexistente", ex.getRequestURL());
+    Problem problem = createProblemBuilder(status, ProblemType.RECURSO_NAO_ENCONTRADO, url).build();
+
+    return handleExceptionInternal(ex, problem, headers, status, request);
   }
 
   private ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex,
@@ -109,7 +119,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     HttpStatus status = HttpStatus.NOT_FOUND;
 
-    Problem problem = createProblemBuilder(status, ProblemType.ENTIDADE_NAO_ENCONTRADA, e.getMessage()).build();
+    Problem problem = createProblemBuilder(status, ProblemType.RECURSO_NAO_ENCONTRADO, e.getMessage()).build();
 
     return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
   }
