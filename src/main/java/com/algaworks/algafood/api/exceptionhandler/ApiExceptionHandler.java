@@ -28,6 +28,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
   private static final String O_CORPO_DA_REQUISICAO_ESTA_INVALIDO_VERIFIQUE_ERRO_DE_SINTAXE = "O corpo da requisição está inválido. Verifique erro de sintaxe";
 
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<Object> handleGenericsException(Exception ex, WebRequest request) {
+    String detail = "Ocorreu um erro interno inesperado no sistem. Tente novamente e se o problema persistir, entre em contato com o administrador do sistema";
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Content-Type", "application/json");
+
+    Problem bodyResponse = createProblemBuilder(HttpStatus.INTERNAL_SERVER_ERROR, ProblemType.ERRO_DE_SISTEMA, detail)
+        .build();
+    return handleExceptionInternal(ex, bodyResponse, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
+  }
+
   @Override
   protected ResponseEntity<Object> handleTypeMismatch(
       TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
