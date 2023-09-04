@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.exceptionhandler;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -10,7 +11,8 @@ public enum ProblemType {
   ENTIDADE_EM_USO("/entidade-em-uso", "Entidade em uso"),
   ERRO_NEGOCIO("/erro-negocio", "Violação de regra de negócio"),
   PARAMETRO_INVALIDO("/parametro-invaliado", "Parâmetro inválido"),
-  ERRO_DE_SISTEMA("/erro-de-sistema", "Erro de Sistema");
+  ERRO_DE_SISTEMA("/erro-de-sistema", "Erro de Sistema"),
+  DADOS_INVALIDOS("/dados-invalidos", "Dados inválidos");
 
   private String title;
   private String uri;
@@ -20,5 +22,7 @@ public enum ProblemType {
 
     this.uri = "https://algafood.com.br" + path;
   }
+  
+
 
 }

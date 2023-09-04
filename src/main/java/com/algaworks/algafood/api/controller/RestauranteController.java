@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,7 @@ public class RestauranteController {
   }
 
   @PutMapping("/{restauranteId}")
-  public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
+  public Restaurante atualizar(@PathVariable Long restauranteId, @Valid @RequestBody Restaurante restaurante) {
     try {
       cadastroRestaurante.buscarOuFalharCozinha(restaurante);
     } catch (CozinhaNaoEncontradaException e) {
