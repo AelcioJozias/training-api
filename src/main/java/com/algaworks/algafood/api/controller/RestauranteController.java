@@ -56,7 +56,7 @@ public class RestauranteController {
   }
 
   @PostMapping
-  public Restaurante adicionar(@Validated(Groups.CadastroRestaurante.class) @RequestBody Restaurante restaurante) {
+  public Restaurante adicionar(@Valid @RequestBody Restaurante restaurante) {
     try {
       cadastroRestaurante.buscarOuFalharCozinha(restaurante);
     } catch (CozinhaNaoEncontradaException e) {
