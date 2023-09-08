@@ -5,6 +5,8 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,48 +31,47 @@ public class CidadeController {
 
 	@Autowired
 	private CidadeRepository cidadeRepository;
-	
+
 	@Autowired
 	private CadastroCidadeService cadastroCidade;
-	
+
 	@GetMapping
 	public List<Cidade> listar() {
 		return cidadeRepository.findAll();
 	}
-	
+
 	@GetMapping("/{cidadeId}")
 	public Cidade buscar(@PathVariable Long cidadeId) {
 		return cadastroCidade.buscarOuFalhar(cidadeId);
 	}
-	
+
 	@PostMapping
 	@ResponseStatus(value = CREATED)
-	public Cidade adicionar(@RequestBody Cidade cidade) {
+	public Cidade adicionar(@Valid @RequestBody Cidade cidade) {
 		try {
-      if(cidade.getEstado() != null)
-			  cadastroCidade.buscarOuFalharEstado(cidade.getEstado().getId());
-		}
-		catch(EstadoNaoEncontradoException entidadeNaoEncontradaException){
+			if (cidade.getEstado() != null)
+				cadastroCidade.buscarOuFalharEstado(cidade.getEstado().getId());
+		} catch (EstadoNaoEncontradoException entidadeNaoEncontradaException) {
 			throw new NegocioException(entidadeNaoEncontradaException.getMessage(), entidadeNaoEncontradaException);
 		}
 		return cadastroCidade.salvar(cidade);
 	}
-	
+
 	@PutMapping("/{cidadeId}")
-	public Cidade atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
+	public Cidade atualizar(@PathVariable Long cidadeId, @Valid @RequestBody Cidade cidade) {
 		Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(cidadeId);
 		BeanUtils.copyProperties(cidade, cidadeAtual, "id");
 		try {
 			cidadeAtual = cadastroCidade.salvar(cidadeAtual);
-		}catch(EstadoNaoEncontradoException entidadeNaoEncontradaException) {
+		} catch (EstadoNaoEncontradoException entidadeNaoEncontradaException) {
 			throw new NegocioException(entidadeNaoEncontradaException.getMessage(), entidadeNaoEncontradaException);
 		}
 		return cidadeAtual;
 	}
-	
+
 	@ResponseStatus(NO_CONTENT)
 	@DeleteMapping("/{cidadeId}")
 	public void remover(@PathVariable Long cidadeId) {
-		cadastroCidade.excluir(cidadeId);	
+		cadastroCidade.excluir(cidadeId);
 	}
 }

@@ -3,6 +3,9 @@ package com.algaworks.algafood.api.controller;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 import java.util.List;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,28 +28,28 @@ public class EstadoController {
 
 	@Autowired
 	private EstadoRepository estadoRepository;
-	
+
 	@Autowired
 	private CadastroEstadoService cadastroEstado;
-	
+
 	@GetMapping
 	public List<Estado> listar() {
 		return estadoRepository.findAll();
 	}
-	
+
 	@GetMapping("/{estadoId}")
 	public Estado buscar(@PathVariable Long estadoId) {
 		return cadastroEstado.buscarOuFalhar(estadoId);
 	}
-	
+
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Estado adicionar(@RequestBody Estado estado) {
+	public Estado adicionar(@Valid @RequestBody Estado estado) {
 		return cadastroEstado.salvar(estado);
 	}
-	
+
 	@PutMapping("/{estadoId}")
-	public Estado atualizar(@PathVariable Long estadoId, @RequestBody Estado estado) {
+	public Estado atualizar(@PathVariable Long estadoId, @Valid @RequestBody Estado estado) {
 		Estado estadoAtual = cadastroEstado.buscarOuFalhar(estadoId);
 		BeanUtils.copyProperties(estado, estadoAtual, "id");
 		return cadastroEstado.salvar(estadoAtual);
@@ -55,7 +58,7 @@ public class EstadoController {
 	@ResponseStatus(NO_CONTENT)
 	@DeleteMapping("/{estadoId}")
 	public void remover(@PathVariable Long estadoId) {
-			cadastroEstado.excluir(estadoId);	
+		cadastroEstado.excluir(estadoId);
 	}
-	
+
 }

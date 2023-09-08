@@ -1,6 +1,5 @@
 package com.algaworks.algafood.api.exceptionhandler;
 
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -22,7 +21,5 @@ public enum ProblemType {
 
     this.uri = "https://algafood.com.br" + path;
   }
-  
-
 
 }
