@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +32,19 @@ import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
+  @Autowired
+  private MessageSource messageSource;
+
   private static final String UM_OU_MAIS_CAMPOS_ESTÃO_INVÁLIDOS_FAÇA_CORRETAMENTE_E_TENTE_NOVAMENTE = "Um ou mais campos estão inválidos. Faça o preenchimento corretamente e tente novamente";
+
   private static final String MSG_ERRO_GENERICA_USUARIO_FINAL = "Ocorreu um erro interno inesperado no sistem. Tente novamente e se o problema persistir, entre em contato com o administrador do sistema";
   private static final String O_CORPO_DA_REQUISICAO_ESTA_INVALIDO_VERIFIQUE_ERRO_DE_SINTAXE = "O corpo da requisição está inválido. Verifique erro de sintaxe";
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<Object> handleGenericsException(Exception ex, WebRequest request) {
+
     String detail = MSG_ERRO_GENERICA_USUARIO_FINAL;
+
     HttpHeaders headers = new HttpHeaders();
     headers.add("Content-Type", "application/json");
 
@@ -51,11 +60,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     List<Problem.Fields> fields = ex.getBindingResult().getFieldErrors()
         .stream()
-        .map(fieldError -> Problem.Fields
-            .builder()
-            .name(fieldError.getField())
-            .userMessage(fieldError.getDefaultMessage())
-            .build())
+        .map(fieldError -> {
+          String name = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+
+          return Problem.Fields
+              .builder()
+              .name(fieldError.getField())
+              .userMessage(name)
+              .build();
+        })
+
         .collect(Collectors.toList());
 
     Problem problem = createProblemBuilder(status, ProblemType.DADOS_INVALIDOS,
