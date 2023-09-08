@@ -10,15 +10,14 @@ import com.algaworks.algafood.domain.repository.RestauranteRepository;
 @Service
 public class CadastroRestauranteService {
 
-
 	private static final String NAO_EXISTE_UM_RESTAURANTE_COM_O_ID = "Não existe um restaurante com o id: %d";
 
 	@Autowired
 	private RestauranteRepository restauranteRepository;
-	
+
 	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
-	
+
 	public Restaurante salvar(Restaurante restaurante) {
 		return restauranteRepository.save(restaurante);
 	}
@@ -26,10 +25,10 @@ public class CadastroRestauranteService {
 	public void buscarOuFalharCozinha(Restaurante restaurante) {
 		cadastroCozinhaService.buscarOuFalhar(restaurante.getCozinha().getId());
 	}
-	
+
 	public Restaurante buscarOuFalhar(Long id) {
 		return restauranteRepository.findById(id).orElseThrow(() -> new RestauranteNaoEncontradoException(
 				String.format(NAO_EXISTE_UM_RESTAURANTE_COM_O_ID, id)));
 	}
-	
+
 }

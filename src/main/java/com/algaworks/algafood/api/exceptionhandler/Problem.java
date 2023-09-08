@@ -22,11 +22,10 @@ public class Problem {
   private String userMassege;
   private List<Fields> fields;
 
-
   @Getter
   @Builder
   public static class Fields {
-    
+
     private String name;
     private String userMessage;
   }

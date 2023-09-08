@@ -7,7 +7,7 @@ public class RestauranteNaoEncontradoException extends NegocioException {
 	public RestauranteNaoEncontradoException(String mensagem) {
 		super(mensagem);
 	}
-	
+
 	public RestauranteNaoEncontradoException(String mensagem, Throwable causa) {
 		super(mensagem, causa);
 	}

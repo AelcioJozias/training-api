@@ -15,30 +15,30 @@ public class CadastroEstadoService {
 
 	private static final String NÃO_EXISTE_UM_CADASTRO_DE_ESTADO_COM_CÓDIGO = "Não existe um cadastro de estado com código %d";
 	private static final String ESTADO_DE_CÓDIGO_NÃO_PODE_SER_REMOVIDO_POIS_ESTÁ_EM_USO = "Estado de código %d não pode ser removido, pois está em uso";
-	
+
 	@Autowired
 	private EstadoRepository estadoRepository;
-	
+
 	public Estado salvar(Estado estado) {
 		return estadoRepository.save(estado);
 	}
-	
+
 	public void excluir(Long estadoId) {
 		try {
 			estadoRepository.deleteById(estadoId);
 		} catch (EmptyResultDataAccessException exception) {
 			throw new EstadoNaoEncontradoException(
-				String.format(NÃO_EXISTE_UM_CADASTRO_DE_ESTADO_COM_CÓDIGO, estadoId), exception);
-		
+					String.format(NÃO_EXISTE_UM_CADASTRO_DE_ESTADO_COM_CÓDIGO, estadoId), exception);
+
 		} catch (DataIntegrityViolationException exception) {
 			throw new EntidadeEmUsoException(
-				String.format(ESTADO_DE_CÓDIGO_NÃO_PODE_SER_REMOVIDO_POIS_ESTÁ_EM_USO, estadoId, exception));
+					String.format(ESTADO_DE_CÓDIGO_NÃO_PODE_SER_REMOVIDO_POIS_ESTÁ_EM_USO, estadoId, exception));
 		}
 	}
-	
+
 	public Estado buscarOuFalhar(Long id) {
-		return estadoRepository.findById(id).
-				orElseThrow(() -> new EstadoNaoEncontradoException(String.format(NÃO_EXISTE_UM_CADASTRO_DE_ESTADO_COM_CÓDIGO, id)));
+		return estadoRepository.findById(id).orElseThrow(
+				() -> new EstadoNaoEncontradoException(String.format(NÃO_EXISTE_UM_CADASTRO_DE_ESTADO_COM_CÓDIGO, id)));
 	}
-	
+
 }

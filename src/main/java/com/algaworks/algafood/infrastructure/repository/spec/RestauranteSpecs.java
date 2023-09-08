@@ -9,21 +9,18 @@ import com.algaworks.algafood.domain.model.Restaurante;
 public class RestauranteSpecs {
 
 	public static Specification<Restaurante> comFreteGratis() {
-		return (root, querssy, builder) -> 
-			builder.equal(root.get("taxaFrete"), BigDecimal.ZERO);
+		return (root, querssy, builder) -> builder.equal(root.get("taxaFrete"), BigDecimal.ZERO);
 	}
-	
+
 	public static Specification<Restaurante> comNomeSemelhante(String nome) {
-		return (root, query, builder) ->
-			builder.like(root.get("nome"), "%" + nome + "%");
+		return (root, query, builder) -> builder.like(root.get("nome"), "%" + nome + "%");
 	}
-	
-	public static Specification<Restaurante> teste(){
+
+	public static Specification<Restaurante> teste() {
 		return (root, query, builder) -> {
-			 return builder.like(root.get("nome"), "teste"+ "$" + "s");
+			return builder.like(root.get("nome"), "teste" + "$" + "s");
 		};
-			
-		
+
 	}
-	
+
 }

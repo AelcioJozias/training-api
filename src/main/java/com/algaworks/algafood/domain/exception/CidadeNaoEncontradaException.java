@@ -7,7 +7,7 @@ public class CidadeNaoEncontradaException extends NegocioException {
 	public CidadeNaoEncontradaException(String mensagem) {
 		super(mensagem);
 	}
-	
+
 	public CidadeNaoEncontradaException(String mensagem, Throwable causa) {
 		super(mensagem, causa);
 	}
