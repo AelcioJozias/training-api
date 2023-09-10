@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -58,15 +59,21 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
 
-    List<Problem.Fields> fields = ex.getBindingResult().getFieldErrors()
+    List<Problem.Object> objects = ex.getBindingResult().getAllErrors()
         .stream()
-        .map(fieldError -> {
-          String name = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+        .map(objectError -> {
+          String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
 
-          return Problem.Fields
+          String name = objectError.getObjectName();
+
+          if (objectError instanceof FieldError) {
+            name = ((FieldError) objectError).getField();
+          }
+
+          return Problem.Object
               .builder()
-              .name(fieldError.getField())
-              .userMessage(name)
+              .name(name)
+              .userMessage(message)
               .build();
         })
 
@@ -75,7 +82,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     Problem problem = createProblemBuilder(status, ProblemType.DADOS_INVALIDOS,
         UM_OU_MAIS_CAMPOS_ESTÃO_INVÁLIDOS_FAÇA_CORRETAMENTE_E_TENTE_NOVAMENTE)
         .userMassege(UM_OU_MAIS_CAMPOS_ESTÃO_INVÁLIDOS_FAÇA_CORRETAMENTE_E_TENTE_NOVAMENTE)
-        .fields(fields)
+        .fields(objects)
         .build();
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
