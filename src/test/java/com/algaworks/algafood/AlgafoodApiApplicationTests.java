@@ -21,7 +21,7 @@ public class AlgafoodApiApplicationTests {
 	CadastroCozinhaService cozinhaService;
 	
 	@Test
-	public void testarCadastroCozinha() {
+	public void deveAtribuirId_QuandoCadastrarCozinhaComDadosCorretos() {
 		// cenário
 		Cozinha novaCozinha = new Cozinha();
 		novaCozinha.setNome("Chinesa");
@@ -35,7 +35,7 @@ public class AlgafoodApiApplicationTests {
 	}
 	
 	@Test(expected = ConstraintViolationException.class)
-	public void testarCadastroCozinhaSemNome() {
+	public void deveFalhar_QuandoCadastrarCozinhaSemNome() {
 		Cozinha novaCozinha = new Cozinha();
 		novaCozinha.setNome(null);
 		
