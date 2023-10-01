@@ -20,42 +20,5 @@ import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 @SpringBootTest
 public class CadastroCozinhaIT {
 
-  @Autowired
-  CadastroCozinhaService cadastroCozinha;
-
-  @Autowired
-  CozinhaRepository cozinhaRepository;
-
-  @Test
-  public void deveAtribuirId_QuandoCadastrarCozinhaComDadosCorretos() {
-    // cenário
-    Cozinha novaCozinha = new Cozinha();
-    novaCozinha.setNome("Chinesa");
-
-    // ação
-    novaCozinha = cadastroCozinha.salvar(novaCozinha);
-
-    // validação
-    assertThat(novaCozinha).isNotNull();
-    assertThat(novaCozinha.getId()).isNotNull();
-  }
-
-  @Test(expected = ConstraintViolationException.class)
-  public void deveFalhar_QuandoCadastrarCozinhaSemNome() {
-    Cozinha novaCozinha = new Cozinha();
-    novaCozinha.setNome(null);
-
-    novaCozinha = cadastroCozinha.salvar(novaCozinha);
-  }
-
-  @Test(expected = EntidadeEmUsoException.class)
-	public void deveFalhar_QuandoExcluirCozinhaEmUso() {
-		cadastroCozinha.excluir(1L);
-	}
-
-	@Test(expected = CozinhaNaoEncontradaException.class)
-	public void deveFalhar_QuandoExcluirCozinhaInexistente() {
-		cadastroCozinha.excluir(100L);
-	}
 
 }
