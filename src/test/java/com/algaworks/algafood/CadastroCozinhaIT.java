@@ -3,10 +3,13 @@ package com.algaworks.algafood;
 import static io.restassured.RestAssured.basePath;
 import static io.restassured.RestAssured.enableLoggingOfRequestAndResponseIfValidationFails;
 import static io.restassured.RestAssured.given;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.flywaydb.core.Flyway;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -23,12 +26,18 @@ public class CadastroCozinhaIT {
 	@LocalServerPort
 	private int port;
 	
+	@Autowired
+	Flyway flyway;
+	
+	
 	
 	@Before
 	public void setUp() {
 		enableLoggingOfRequestAndResponseIfValidationFails();
 		RestAssured.port = this.port;
 		basePath = "/cozinhas";
+		
+		flyway.migrate();
 	}
 	
 	@Test
@@ -52,6 +61,19 @@ public class CadastroCozinhaIT {
 			.body("nome", Matchers.hasItems("Indiana", "Tailandesa"));
 	}
 	
+	
+	@Test
+	public void testRetornaStatus201_QuandoCadastrarCozinha() {
+		given()
+			.body("{ \"nome\": \"Chinesa\"}")
+			.contentType(ContentType.JSON)
+			.accept(ContentType.JSON)
+		.when()
+			.post()
+		.then()
+			.statusCode(201);
+		
+	}
 }
 
 
