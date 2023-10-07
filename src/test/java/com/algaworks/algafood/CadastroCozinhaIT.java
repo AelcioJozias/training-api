@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.util.DatabaseCleaner;
+import com.algaworks.algafood.util.ResourceUtills;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -26,6 +27,14 @@ import io.restassured.http.ContentType;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource({"/application-test.properties"})
 public class CadastroCozinhaIT {
+
+	private static final String JSONS_CADASTRO_COZINHA_PATH = "/jsons/cadastroCozinha.json";
+
+	private static final int cozinhaIdInexistente = 100;
+	
+	private int numeroDeCozinhas = 0;
+	
+	private Cozinha cozinhaTailandresa;
 
 	@LocalServerPort
 	private int port;
@@ -41,9 +50,9 @@ public class CadastroCozinhaIT {
 		enableLoggingOfRequestAndResponseIfValidationFails();
 		RestAssured.port = this.port;
 		basePath = "/cozinhas";
-		
 		databaseCleaner.clearTables();
 		prepararDados();
+		System.out.println("-----------------------  NÚMERO DE COZINHAS: " + this.numeroDeCozinhas + " ----------------" );
 	}
 	
 	@Test
@@ -57,39 +66,69 @@ public class CadastroCozinhaIT {
 	}
 	
 	@Test
-	public void deveConter2Cozinhas_QuandoConsultarCozinhas() {
+	public void deveConternumeroDeCozinhasCozinhasAdicionadaEmPreradarDados_QuandoConsultarCozinhas() {
 		given()
 			.accept(ContentType.JSON)
 		.when()
 			.get()
 		.then()
-			.body("", Matchers.hasSize(2))
-			.body("nome", Matchers.hasItems("Indiana", "Tailandesa"));
+			.body("", Matchers.hasSize(this.numeroDeCozinhas));
 	}
 	
 	
 	@Test
 	public void deveRetornaStatus201_QuandoCadastrarCozinha() {
+		String json = ResourceUtills.getContentFromResource(JSONS_CADASTRO_COZINHA_PATH);
 		given()
-			.body("{ \"nome\": \"Chinesa\"}")
+			.body(json)
 			.contentType(ContentType.JSON)
 			.accept(ContentType.JSON)
 		.when()
 			.post()
 		.then()
-			.statusCode(201);
+			.statusCode(HttpStatus.CREATED.value());
 		
 	}
 	
+	public void deveRetornarConsultaEStatusCorreto_QuandoConsultarCozinhaExistente() {
+		RestAssured.given()
+			.pathParam("cozinhaId", cozinhaTailandresa.getId())
+			.accept(ContentType.JSON)
+		.when()
+			.get("/{cozinhaId}")
+		.then()
+			.statusCode(HttpStatus.OK.value())
+			.body("nome", Matchers.equalTo(cozinhaTailandresa.getNome()));
+	}
+	
+	@Test
+	public void deveRetornarStatus404_QuandoConsultarCozinhaInexistente() {
+		RestAssured.given()
+			.pathParam("cozinhaId", cozinhaIdInexistente)
+			.accept(ContentType.JSON)
+		.when()
+			.get("/{cozinhaId}")
+		.then()
+			.statusCode(HttpStatus.BAD_REQUEST.value());
+	}
+	
 	public void prepararDados() {
-		Cozinha cozinha1 = new Cozinha();
-		cozinha1.setNome("Tailandesa");
-		cozinhaRepository.save(cozinha1);
+		cozinhaTailandresa = new Cozinha();
+		cozinhaTailandresa.setNome("Tailandesa");
+		cozinhaRepository.save(cozinhaTailandresa);
+		incrementarNumeroDeCozinhasAdicionada();
 		
 		Cozinha cozinha2 = new Cozinha();
 		cozinha2.setNome("Americana");
 		cozinhaRepository.save(cozinha2);
+		incrementarNumeroDeCozinhasAdicionada();
 	}
+
+	private void incrementarNumeroDeCozinhasAdicionada() {
+		++numeroDeCozinhas;
+	}
+	
+	// desafio 2, analisar e escrever testes para os endpoints consultas e cadastros de restaurantes
  	
 }
 
