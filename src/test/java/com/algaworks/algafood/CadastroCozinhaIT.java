@@ -127,9 +127,6 @@ public class CadastroCozinhaIT {
 	private void incrementarNumeroDeCozinhasAdicionada() {
 		++numeroDeCozinhas;
 	}
-	
-	// desafio 2, analisar e escrever testes para os endpoints consultas e cadastros de restaurantes
- 	
 }
 
 
