@@ -14,9 +14,9 @@ import javax.transaction.Transactional;
 @Service
 public class CadastroCidadeService {
 
-	private static final String NÃO_É_POSSÍVEL_EXCLUIR_O_ID_ESTÁ_SENDO_USADO_COMO_UMA_FK = "não é possível excluir o id %d. id está sendo usado como uma fk";
+	private static final String NOO_E_POSSIVEL_EXCLUIR_O_ID_ESTÁ_SENDO_USADO_COMO_UMA_FK = "não é possível excluir o id %d. id está sendo usado como uma fk";
 
-	private static final String NÃO_EXISTE_UM_CADASTRO_DE_CIDADE_COM_CÓDIGO = "Não existe um cadastro de cidade com código %d";
+	private static final String NAO_EXISTE_UM_CADASTRO_DE_CIDADE_COM_CODIGO = "Não existe um cadastro de cidade com código %d";
 
 	@Autowired
 	private CidadeRepository cidadeRepository;
@@ -41,12 +41,12 @@ public class CadastroCidadeService {
 			cidadeRepository.deleteById(cidadeId);
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
-					String.format(NÃO_É_POSSÍVEL_EXCLUIR_O_ID_ESTÁ_SENDO_USADO_COMO_UMA_FK, cidadeId), e);
+					String.format(NOO_E_POSSIVEL_EXCLUIR_O_ID_ESTÁ_SENDO_USADO_COMO_UMA_FK, cidadeId), e);
 		}
 	}
 
 	public Cidade buscarOuFalhar(Long id) {
 		return cidadeRepository.findById(id).orElseThrow(
-				() -> new CidadeNaoEncontradaException(String.format(NÃO_EXISTE_UM_CADASTRO_DE_CIDADE_COM_CÓDIGO, id)));
+				() -> new CidadeNaoEncontradaException(String.format(NAO_EXISTE_UM_CADASTRO_DE_CIDADE_COM_CODIGO, id)));
 	}
 }
