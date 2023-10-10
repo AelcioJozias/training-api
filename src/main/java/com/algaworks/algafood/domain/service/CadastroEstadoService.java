@@ -1,5 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,10 +21,12 @@ public class CadastroEstadoService {
 	@Autowired
 	private EstadoRepository estadoRepository;
 
+	@Transactional
 	public Estado salvar(Estado estado) {
 		return estadoRepository.save(estado);
 	}
 
+	@Transactional
 	public void excluir(Long estadoId) {
 		try {
 			estadoRepository.deleteById(estadoId);
@@ -35,7 +39,7 @@ public class CadastroEstadoService {
 					String.format(ESTADO_DE_CÓDIGO_NÃO_PODE_SER_REMOVIDO_POIS_ESTÁ_EM_USO, estadoId, exception));
 		}
 	}
-
+	
 	public Estado buscarOuFalhar(Long id) {
 		return estadoRepository.findById(id).orElseThrow(
 				() -> new EstadoNaoEncontradoException(String.format(NÃO_EXISTE_UM_CADASTRO_DE_ESTADO_COM_CÓDIGO, id)));

@@ -1,5 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ public class CadastroRestauranteService {
 	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
 
+	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
 		return restauranteRepository.save(restaurante);
 	}
