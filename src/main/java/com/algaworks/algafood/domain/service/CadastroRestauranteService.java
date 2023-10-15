@@ -22,6 +22,7 @@ public class CadastroRestauranteService {
 
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
+		restaurante.setCozinha(cadastroCozinhaService.buscarOuFalhar(restaurante.getCozinha().getId()));
 		return restauranteRepository.save(restaurante);
 	}
 

@@ -2,8 +2,7 @@ package com.algaworks.algafood.domain.model;
 
 import com.algaworks.algafood.core.validation.Groups;
 import com.algaworks.algafood.core.validation.ValorZeroIncluiDescricao;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -23,6 +22,9 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Restaurante {
 
 	@EqualsAndHashCode.Include
@@ -34,17 +36,11 @@ public class Restaurante {
 	@Column(nullable = false)
 	private String nome;
 
-	// @TaxaFrete
-	// @Multiplo(numero = 5)
 	@PositiveOrZero
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 
-	@Valid
 	@NotNull
-	// pede para converter do grupo padrao que estamos usando para um outro grupo e
-	// validar o outro grupo
-	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
 	@ManyToOne // (fetch = FetchType.LAZY)
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
