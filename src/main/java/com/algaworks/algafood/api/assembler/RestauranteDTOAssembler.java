@@ -17,9 +17,7 @@ public class RestauranteDTOAssembler {
     private ModelMapper modelMapper;
 
     public RestauranteDTO toDTO (Restaurante restaurante) {
-        RestauranteDTO restauranteDTO = new RestauranteDTO();
-        modelMapper.map(restaurante, restauranteDTO);
-        return restauranteDTO;
+        return modelMapper.map(restaurante, RestauranteDTO.class);
     }
 
     public List<RestauranteDTO> toCollectionDTO (List<Restaurante> restaurantes) {
