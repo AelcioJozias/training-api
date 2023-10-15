@@ -18,6 +18,7 @@
 
     <properties>
         <java.version>12</java.version>
+        <modelmapper.version>2.3.0</modelmapper.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>12</maven.compiler.release>
     </properties>
@@ -79,6 +80,12 @@
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
             <version>1.9.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${modelmapper.version}</version>
         </dependency>
     </dependencies>
 
