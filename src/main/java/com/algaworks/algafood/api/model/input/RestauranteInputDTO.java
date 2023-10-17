@@ -17,6 +17,7 @@ public class RestauranteInputDTO {
     @NotBlank
     private String nome;
 
+    @NotNull
     @PositiveOrZero
     private BigDecimal taxaFrete;
 
