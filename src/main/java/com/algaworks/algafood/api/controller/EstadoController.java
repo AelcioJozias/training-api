@@ -4,8 +4,13 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import com.algaworks.algafood.api.assembler.EstadoDTOAssembler;
+import com.algaworks.algafood.api.assembler.EstadoDTODisassembler;
+import com.algaworks.algafood.api.model.EstadoDTO;
+import com.algaworks.algafood.api.model.input.EstadoInputDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,14 +32,20 @@ import com.algaworks.algafood.domain.service.CadastroEstadoService;
 public class EstadoController {
 
 	@Autowired
+	private EstadoDTOAssembler estadoDTOAssembler;
+
+	@Autowired
+	private EstadoDTODisassembler estadoDTODisassembler;
+
+	@Autowired
 	private EstadoRepository estadoRepository;
 
 	@Autowired
 	private CadastroEstadoService cadastroEstado;
 
 	@GetMapping
-	public List<Estado> listar() {
-		return estadoRepository.findAll();
+	public List<EstadoDTO> listar() {
+		return estadoDTOAssembler.toCollectionDTO(estadoRepository.findAll());
 	}
 
 	@GetMapping("/{estadoId}")
@@ -44,14 +55,14 @@ public class EstadoController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Estado adicionar(@Valid @RequestBody Estado estado) {
-		return cadastroEstado.salvar(estado);
+	public EstadoDTO adicionar(@Valid @RequestBody EstadoInputDTO estadoInputDTO) {
+		return estadoDTOAssembler.toDTO(cadastroEstado.salvar(estadoDTODisassembler.toModel(estadoInputDTO)));
 	}
 
 	@PutMapping("/{estadoId}")
-	public Estado atualizar(@PathVariable Long estadoId, @Valid @RequestBody Estado estado) {
+	public Estado atualizar(@PathVariable Long estadoId, @Valid @RequestBody EstadoInputDTO estadoInputDTO) {
 		Estado estadoAtual = cadastroEstado.buscarOuFalhar(estadoId);
-		BeanUtils.copyProperties(estado, estadoAtual, "id");
+		estadoDTODisassembler.copyToDomainObject(estadoInputDTO, estadoAtual);
 		return cadastroEstado.salvar(estadoAtual);
 	}
 

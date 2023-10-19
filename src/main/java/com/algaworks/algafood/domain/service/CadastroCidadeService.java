@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.service;
 
+import com.algaworks.algafood.domain.model.Estado;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -31,14 +32,16 @@ public class CadastroCidadeService {
 		return cidadeRepository.save(cidade);
 	}
 
-	public void buscarOuFalharEstado(Long estadoId) {
-		cadastroEstadoService.buscarOuFalhar(estadoId);
+	public Estado buscarOuFalharEstado(Long estadoId) {
+		return cadastroEstadoService.buscarOuFalhar(estadoId);
 	}
+
 	@Transactional
 	public void excluir(Long cidadeId) {
 		try {
 			buscarOuFalhar(cidadeId);
 			cidadeRepository.deleteById(cidadeId);
+      cidadeRepository.flush();
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
 					String.format(NOO_E_POSSIVEL_EXCLUIR_O_ID_ESTÁ_SENDO_USADO_COMO_UMA_FK, cidadeId), e);

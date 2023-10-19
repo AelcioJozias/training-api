@@ -1,15 +1,17 @@
 package com.algaworks.algafood.api.model.input;
 
+import javax.validation.constraints.NotBlank;
+
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
-
+/**
+ * CozinhaInputDTO
+ */
 @Getter
 @Setter
 public class CozinhaInputDTO {
 
-        @NotNull
-        private Long id;
-
+  @NotBlank
+  private String nome; 
 }

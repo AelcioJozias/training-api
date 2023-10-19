@@ -1,14 +1,14 @@
 package com.algaworks.algafood.api.model.input;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.stereotype.Component;
+import java.math.BigDecimal;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
-import java.math.BigDecimal;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -23,6 +23,6 @@ public class RestauranteInputDTO {
 
     @NotNull
     @Valid
-    private CozinhaInputDTO cozinha;
+    private CozinhaRestaurantanteInputDTO cozinha;
 
 }
