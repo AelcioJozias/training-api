@@ -4,14 +4,12 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import com.algaworks.algafood.api.assembler.EstadoDTOAssembler;
 import com.algaworks.algafood.api.assembler.EstadoDTODisassembler;
-import com.algaworks.algafood.api.model.EstadoDTO;
-import com.algaworks.algafood.api.model.input.EstadoInputDTO;
-import org.springframework.beans.BeanUtils;
+import com.algaworks.algafood.api.dto.EstadoDTO;
+import com.algaworks.algafood.api.dto.input.EstadoInputDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;

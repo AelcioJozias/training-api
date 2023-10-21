@@ -9,8 +9,8 @@ import javax.validation.Valid;
 
 import com.algaworks.algafood.api.assembler.CidadeDTOAssembler;
 import com.algaworks.algafood.api.assembler.CidadeDTODisassembler;
-import com.algaworks.algafood.api.model.CidadeDTO;
-import com.algaworks.algafood.api.model.input.CidadeInputDTO;
+import com.algaworks.algafood.api.dto.CidadeDTO;
+import com.algaworks.algafood.api.dto.input.CidadeInputDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
