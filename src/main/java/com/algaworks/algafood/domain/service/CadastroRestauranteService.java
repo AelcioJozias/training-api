@@ -35,4 +35,16 @@ public class CadastroRestauranteService {
 				String.format(NAO_EXISTE_UM_RESTAURANTE_COM_O_ID, id)));
 	}
 
+	@Transactional
+	public void ativar(Long id) {
+		Restaurante restaurante = buscarOuFalhar(id);
+		restaurante.ativar();
+	}
+
+	@Transactional
+	public void desativar(Long id) {
+		Restaurante restaurante = buscarOuFalhar(id);
+		restaurante.desativar();
+	}
+
 }
