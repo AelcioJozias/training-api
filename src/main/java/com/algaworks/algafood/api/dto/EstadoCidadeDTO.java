@@ -8,7 +8,6 @@ import lombok.Setter;
 public class EstadoCidadeDTO {
 
   private Long id;
-  
   private String nome;
   
 }

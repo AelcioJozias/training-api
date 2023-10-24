@@ -18,7 +18,7 @@
 
     <properties>
         <java.version>12</java.version>
-        <modelmapper.version>2.3.0</modelmapper.version>
+        <modelmapper.version>2.3.5</modelmapper.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>12</maven.compiler.release>
     </properties>
