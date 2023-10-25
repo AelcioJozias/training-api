@@ -2,6 +2,8 @@ package com.algaworks.algafood.domain.service;
 
 import javax.transaction.Transactional;
 
+import com.algaworks.algafood.domain.model.Cidade;
+import com.algaworks.algafood.domain.repository.CidadeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +22,13 @@ public class CadastroRestauranteService {
 	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
 
+	@Autowired
+	private CadastroCidadeService cadastroCidadeService;
+
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
 		restaurante.setCozinha(cadastroCozinhaService.buscarOuFalhar(restaurante.getCozinha().getId()));
+		restaurante.getEndereco().setCidade(buscarOuFalharCidade(restaurante.getEndereco().getCidade().getId()));
 		return restauranteRepository.save(restaurante);
 	}
 
@@ -45,6 +51,10 @@ public class CadastroRestauranteService {
 	public void desativar(Long id) {
 		Restaurante restaurante = buscarOuFalhar(id);
 		restaurante.desativar();
+	}
+
+	public Cidade buscarOuFalharCidade(Long id) {
+		return cadastroCidadeService.buscarOuFalhar(id);
 	}
 
 }

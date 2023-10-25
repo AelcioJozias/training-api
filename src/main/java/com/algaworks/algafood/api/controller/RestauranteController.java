@@ -8,6 +8,7 @@ import com.algaworks.algafood.api.assembler.RestauranteDTOAssembler;
 import com.algaworks.algafood.api.assembler.RestauranteDTODisassembler;
 import com.algaworks.algafood.api.dto.RestauranteDTO;
 import com.algaworks.algafood.api.dto.input.RestauranteInputDTO;
+import com.algaworks.algafood.domain.exception.CidadeNaoEncontradaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.SmartValidator;
@@ -70,7 +71,7 @@ public class RestauranteController {
       Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
       restauranteDTODisassembler.copyToDomainObject(restauranteDTO, restauranteAtual);
       return restauranDTOAssembler.toDTO(cadastroRestaurante.salvar(restauranteAtual));
-    } catch (CozinhaNaoEncontradaException e) {
+    } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
       throw new NegocioException(e.getMessage());
     }
   }
