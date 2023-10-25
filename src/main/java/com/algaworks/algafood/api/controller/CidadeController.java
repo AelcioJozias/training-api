@@ -71,7 +71,7 @@ public class CidadeController {
 	@PutMapping("/{cidadeId}")
 	public CidadeDTO atualizar(@PathVariable Long cidadeId, @Valid @RequestBody CidadeInputDTO cidadeInputDTO) {
 		Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(cidadeId);
-		BeanUtils.copyProperties(cidadeInputDTO, cidadeAtual, "id");
+		cidadeDTODisassembler.copyToDomainObject(cidadeInputDTO, cidadeAtual);
 		try {
 			cidadeAtual = cadastroCidade.salvar(cidadeAtual);
 		} catch (EstadoNaoEncontradoException entidadeNaoEncontradaException) {
