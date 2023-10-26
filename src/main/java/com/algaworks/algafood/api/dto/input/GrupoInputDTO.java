@@ -4,11 +4,13 @@ import javax.validation.constraints.NotBlank;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
-public class FormaPagamentoInputDTO {
+@ToString
+public class GrupoInputDTO {
 
     @NotBlank
-    private String descricao;
+    private String nome;
 }
