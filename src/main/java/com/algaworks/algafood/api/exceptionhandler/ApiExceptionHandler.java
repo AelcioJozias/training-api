@@ -207,7 +207,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     HttpStatus status = HttpStatus.BAD_REQUEST;
 
     Problem problem = createProblemBuilder(status, ProblemType.ERRO_NEGOCIO, e.getMessage())
-        .userMassege(MSG_ERRO_GENERICA_USUARIO_FINAL)
+        .userMassege(e.getMessage())
         .build();
 
     return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
