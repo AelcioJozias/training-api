@@ -36,7 +36,7 @@ public class CadastroFormaPagamentoService {
 
     @Transactional
     public FormaPagamentoDTO salvar(FormaPagamentoInputDTO formaPagamentoInputDTO) {
-        return formaPagamentoAssembler.toDTO(formaPagamentoRepository.save(formaPagamentoDisassembler.toModel(formaPagamentoInputDTO)));
+        return formaPagamentoAssembler.toDTO(formaPagamentoRepository.save(formaPagamentoDisassembler.toDomainObeject(formaPagamentoInputDTO)));
     }
 
     public FormaPagamentoDTO atualizarRecursoCompleto (Long id, FormaPagamentoInputDTO formaPagamentoInputDTO) {

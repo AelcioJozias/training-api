@@ -39,7 +39,7 @@ public class CadastroGrupoService {
 
    @Transactional
     public GrupoDTO salvar(GrupoInputDTO grupoInputDTO) {
-        return getGrupoDTOAssembler().toDTO(grupoRepository.save(grupoDTODisassembler.toModel(grupoInputDTO)));
+        return getGrupoDTOAssembler().toDTO(grupoRepository.save(grupoDTODisassembler.toDomainObject(grupoInputDTO)));
     }
 
     public GrupoDTO buscar(Long id) {

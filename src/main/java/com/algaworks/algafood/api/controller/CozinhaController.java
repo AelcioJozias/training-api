@@ -53,14 +53,14 @@ public class CozinhaController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CozinhaDTO adicionar(@Valid @RequestBody CozinhaDTO cozinhaDTO) {
-		return cozinhaDTOAssembler.toDTO(cadastroCozinha.salvar(cozinhaDTODisassembler.toModel(cozinhaDTO)));
+		return cozinhaDTOAssembler.toDTO(cadastroCozinha.salvar(cozinhaDTODisassembler.toDomainObject(cozinhaDTO)));
 	}
 
 	@PutMapping("/{cozinhaId}")
 	public CozinhaDTO atualizar(@PathVariable Long cozinhaId,
 			@Valid @RequestBody CozinhaDTO cozinhaDTO) {
 		Cozinha cozinhaAtual = cadastroCozinha.buscarOuFalhar(cozinhaId);
-		BeanUtils.copyProperties(cozinhaDTODisassembler.toModel(cozinhaDTO) , cozinhaAtual, "id");
+		BeanUtils.copyProperties(cozinhaDTODisassembler.toDomainObject(cozinhaDTO) , cozinhaAtual, "id");
 		return cozinhaDTOAssembler.toDTO(cadastroCozinha.salvar(cozinhaAtual));
 	}
 

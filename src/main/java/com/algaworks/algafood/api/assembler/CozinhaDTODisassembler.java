@@ -13,7 +13,7 @@ public class CozinhaDTODisassembler {
   @Autowired
   ModelMapper mapper;
   
-  public Cozinha toModel(CozinhaDTO cozinhaDTO) {
+  public Cozinha toDomainObject(CozinhaDTO cozinhaDTO) {
     return mapper.map(cozinhaDTO, Cozinha.class);
   }
 }

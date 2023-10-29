@@ -1,11 +1,12 @@
 package com.algaworks.algafood.api.assembler;
 
-import com.algaworks.algafood.api.dto.input.CidadeInputDTO;
-import com.algaworks.algafood.domain.model.Cidade;
-import com.algaworks.algafood.domain.model.Estado;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.algaworks.algafood.api.dto.input.CidadeInputDTO;
+import com.algaworks.algafood.domain.model.Cidade;
+import com.algaworks.algafood.domain.model.Estado;
 
 @Component
 public class CidadeDTODisassembler {
@@ -13,7 +14,7 @@ public class CidadeDTODisassembler {
     @Autowired
     private ModelMapper modelMapper;
 
-    public Cidade toModel(CidadeInputDTO cidadeInputDTO) {
+    public Cidade toDomainObject(CidadeInputDTO cidadeInputDTO) {
         return modelMapper.map(cidadeInputDTO, Cidade.class);
     }
 

@@ -1,8 +1,15 @@
 package com.algaworks.algafood.domain.service;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.algaworks.algafood.api.assembler.UsuarioDTOAssembler;
 import com.algaworks.algafood.api.assembler.UsuarioDTODisassembler;
-import com.algaworks.algafood.api.dto.UsuarioDTO;
 import com.algaworks.algafood.api.dto.input.UsuarioAtualizarInputDTO;
 import com.algaworks.algafood.api.dto.input.UsuarioAtualizarSenhaInputDTO;
 import com.algaworks.algafood.api.dto.input.UsuarioCadastroInputDTO;
@@ -11,14 +18,6 @@ import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.exception.UsuarioNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.validation.Valid;
-import java.util.List;
 
 @Service
 public class CadastroUsuarioService {
@@ -37,13 +36,13 @@ public class CadastroUsuarioService {
 
     @Transactional
     public Usuario salvar(UsuarioCadastroInputDTO usuarioCadastroInputDTO) {
-        return usuarioRepository.save(usuarioDisassembler.toModelObject(usuarioCadastroInputDTO));
+        return usuarioRepository.save(usuarioDisassembler.toDomainObject(usuarioCadastroInputDTO));
     }
 
     @Transactional
     public Usuario atualizar(Long id, UsuarioAtualizarInputDTO usuarioAtualizarInputDTO) {
         Usuario usuarioAtual = buscarOuFalhar(id);
-        usuarioDisassembler.copyDTOToModel(usuarioAtualizarInputDTO, usuarioAtual);
+        usuarioDisassembler.copyDTOToDomainObject(usuarioAtualizarInputDTO, usuarioAtual);
         return usuarioRepository.save(usuarioAtual);
     }
 
