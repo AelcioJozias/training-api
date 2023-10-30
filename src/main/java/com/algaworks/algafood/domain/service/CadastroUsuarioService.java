@@ -1,6 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -34,8 +35,20 @@ public class CadastroUsuarioService {
     UsuarioRepository usuarioRepository;
 
 
+
+    // observacao, não é correta receber como parametro no save o dto, mas sim a classe de domínio. não vou alterar o que já está pronto, mas na 
+    // próxima não fazer assim
     @Transactional
     public Usuario salvar(UsuarioCadastroInputDTO usuarioCadastroInputDTO) {
+
+      Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(usuarioCadastroInputDTO.getEmail());
+
+      if(usuarioExistente.isPresent()) {
+        throw new NegocioException(String.format("Já existe um usuário cadastrado com esse email: %s", usuarioCadastroInputDTO.getEmail()));
+      }
+
+
+
         return usuarioRepository.save(usuarioDisassembler.toDomainObject(usuarioCadastroInputDTO));
     }
 
