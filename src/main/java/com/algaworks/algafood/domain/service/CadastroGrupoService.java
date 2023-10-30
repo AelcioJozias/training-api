@@ -57,7 +57,7 @@ public class CadastroGrupoService {
         grupoRepository.deleteById(id);
         grupoRepository.flush();
       } catch (ConstraintViolationException e) {
-        throw new EntidadeEmUsoException(String.format("Grupo de id %d não pode ser removido, pois está em uso", id));
+        throw new EntidadeEmUsoException(String.format("Grupo de id %s não pode ser removido, pois está em uso", id));
       } 
        
     }

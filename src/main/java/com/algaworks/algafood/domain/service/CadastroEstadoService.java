@@ -15,8 +15,8 @@ import com.algaworks.algafood.domain.repository.EstadoRepository;
 @Service
 public class CadastroEstadoService {
 
-	private static final String NAO_EXISTE_UM_CADASTRO_DE_ESTADO_COM_CODIGO = "Não existe um cadastro de estado com código %d";
-	private static final String ESTADO_DE_CODIGO_NAO_PODE_SER_REMOVIDO_POIS_ESTA_EM_USO = "Estado de código %d não pode ser removido, pois está em uso";
+	private static final String NAO_EXISTE_UM_CADASTRO_DE_ESTADO_COM_CODIGO = "Não existe um cadastro de estado com código %s";
+	private static final String ESTADO_DE_CODIGO_NAO_PODE_SER_REMOVIDO_POIS_ESTA_EM_USO = "Estado de código %s não pode ser removido, pois está em uso";
 
 	@Autowired
 	private EstadoRepository estadoRepository;

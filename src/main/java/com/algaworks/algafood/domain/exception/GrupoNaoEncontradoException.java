@@ -2,7 +2,7 @@ package com.algaworks.algafood.domain.exception;
 
 public class GrupoNaoEncontradoException extends EntidadeNaoEncontradaException{
 
-  private static final String GRUPO_NAO_ENCONTRADO = "Não foi encontrado um grupo com o id %d";
+  private static final String GRUPO_NAO_ENCONTRADO = "Não foi encontrado um grupo com o id %s";
 
     public GrupoNaoEncontradoException(String message) {
         super(message);

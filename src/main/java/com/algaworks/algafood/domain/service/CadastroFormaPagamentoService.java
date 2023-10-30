@@ -21,7 +21,7 @@ import com.algaworks.algafood.domain.repository.FormaPagamentoRepository;
 @Service
 public class CadastroFormaPagamentoService {
 
-    public static final String FORMA_DE_PAGAMENTO_DE_ID_D_NAO_PODE_SER_REMOVIDA_POIS_ESTA_EM_USO = "Forma de Pagamento de id %d não pode ser removida, pois está em uso";
+    public static final String FORMA_DE_PAGAMENTO_DE_ID_D_NAO_PODE_SER_REMOVIDA_POIS_ESTA_EM_USO = "Forma de Pagamento de id %s não pode ser removida, pois está em uso";
 
 
     @Autowired

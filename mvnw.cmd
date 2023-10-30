@@ -131,8 +131,8 @@ if exist %WRAPPER_JAR% (
     echo Found %WRAPPER_JAR%
 ) else (
     echo Couldn't find %WRAPPER_JAR%, downloading it ...
-	echo Downloading from: %DOWNLOAD_URL%
-    powershell -Command "(New-Object Net.WebClient).DownloadFile('%DOWNLOAD_URL%', '%WRAPPER_JAR%')"
+	echo Downloading from: %sOWNLOAD_URL%
+    powershell -Command "(New-Object Net.WebClient).DownloadFile('%sOWNLOAD_URL%', '%WRAPPER_JAR%')"
     echo Finished downloading %WRAPPER_JAR%
 )
 @REM End of extension

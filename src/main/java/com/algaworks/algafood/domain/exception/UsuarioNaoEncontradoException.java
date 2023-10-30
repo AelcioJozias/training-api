@@ -2,7 +2,7 @@ package com.algaworks.algafood.domain.exception;
 
 public class UsuarioNaoEncontradoException extends EntidadeNaoEncontradaException {
 
-    private final static String menssagemErro = "Não foi encontrado um usuário com o id %d";
+    private final static String menssagemErro = "Não foi encontrado um usuário com o id %s";
 
     public UsuarioNaoEncontradoException(String mensagem) {
         super(mensagem);
