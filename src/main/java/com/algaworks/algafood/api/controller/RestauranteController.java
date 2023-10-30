@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +25,6 @@ import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
-import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 
 @RestController
@@ -38,12 +36,6 @@ public class RestauranteController {
 
   @Autowired
   private CadastroRestauranteService cadastroRestaurante;
-
-  @Autowired
-  private CadastroCozinhaService cadastroCozinhaService;
-
-  @Autowired
-  private SmartValidator validator;
 
   @Autowired
   private RestauranteDTOAssembler restauranDTOAssembler;
