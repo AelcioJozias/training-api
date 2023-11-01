@@ -1,7 +1,5 @@
 package com.algaworks.algafood.domain.service;
 
-import javax.transaction.Transactional;
-
 import com.algaworks.algafood.domain.model.FormaPagamento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +8,7 @@ import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradoException
 import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +77,16 @@ public class CadastroRestauranteService {
         restaurante.removerFormaPagamento(formaPagamento);
     }
 
+    @Transactional
+    public void abrir(Long id) {
+        Restaurante restaurante = buscarOuFalhar(id);
+        restaurante.abrir();
+    }
 
+    @Transactional
+    public void fechar(Long id) {
+        Restaurante restaurante = buscarOuFalhar(id);
+        restaurante.fechar();
+    }
 
 }

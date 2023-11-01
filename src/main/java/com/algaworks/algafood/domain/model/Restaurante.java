@@ -72,6 +72,16 @@ public class Restaurante {
     @Column(nullable = false)
     private boolean ativo = Boolean.TRUE;
 
+    private boolean aberto = Boolean.TRUE;
+
+    public void abrir() {
+        setAberto(Boolean.TRUE);
+    }
+
+    public void fechar() {
+        setAberto(Boolean.FALSE);
+    }
+
     public void ativar() {
 		setAtivo(Boolean.TRUE);
     }
