@@ -12,6 +12,7 @@ delete from restaurante;
 delete from restaurante_forma_pagamento;
 delete from usuario;
 delete from usuario_grupo;
+delete from restaurante_usuario_responsavel;
 
 set foreign_key_checks = 1;
 
@@ -82,3 +83,6 @@ insert into usuario (id, nome, email, senha, data_cadastro) values
 INSERT INTO grupo_permissao (grupo_id, permissao_id) VALUES (1,1), (1,2), (2,1), (2,2), (3,1);
 
 INSERT into usuario_grupo (usuario_id, grupo_id) values (1,2), (1,3), (2,1), (2,3), (3,1);
+
+insert into restaurante_usuario_responsavel (usuario_id, restaurante_id)
+values (1,1), (2,1), (2,2), (3,3) ;
