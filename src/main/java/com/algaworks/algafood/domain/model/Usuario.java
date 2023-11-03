@@ -3,7 +3,9 @@ package com.algaworks.algafood.domain.model;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,7 +45,17 @@ public class Usuario {
 	private OffsetDateTime dataCadastro;
 
 	@ManyToMany
-	@JoinTable(name = "usuario_grupo", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "grupo_id"))
-	private List<Grupo> grupos = new ArrayList<>();
+	@JoinTable(name = "usuario_grupo",
+			joinColumns = @JoinColumn(name = "usuario_id"),
+			inverseJoinColumns = @JoinColumn(name = "grupo_id"))
+	private Set<Grupo> grupos = new HashSet<>();
+
+	public boolean vincularGupo(Grupo grupo) {
+		return grupos.add(grupo);
+	}
+
+	public boolean desvincularGrupo(Grupo grupo) {
+		return grupos.remove(grupo);
+	}
 
 }
