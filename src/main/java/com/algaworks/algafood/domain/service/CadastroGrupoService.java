@@ -38,12 +38,23 @@ public class CadastroGrupoService {
    }
 
    @Transactional
-    public GrupoDTO salvar(GrupoInputDTO grupoInputDTO) {
+    public GrupoDTO salvarGrupoDTO(GrupoInputDTO grupoInputDTO) {
         return getGrupoDTOAssembler().toDTO(grupoRepository.save(grupoDTODisassembler.toDomainObject(grupoInputDTO)));
     }
 
-    public GrupoDTO buscar(Long id) {
+    @Transactional
+    public Grupo salvar(Grupo grupo) {
+        return grupoRepository.save(grupo);
+    }
+
+
+
+    public GrupoDTO buscarGrupoDTO(Long id) {
        return grupoDTOAssembler.toDTO(buscarOuFalhar(id));
+    }
+
+    public Grupo buscar(Long id) {
+        return buscarOuFalhar(id);
     }
 
     public List<GrupoDTO> listar() {

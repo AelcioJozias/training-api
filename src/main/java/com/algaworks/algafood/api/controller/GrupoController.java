@@ -35,7 +35,7 @@ public class GrupoController {
 
   @GetMapping("/{id}")
   public GrupoDTO pesquisar(@PathVariable Long id){
-    return cadastroGrupoService.buscar(id);
+    return cadastroGrupoService.buscarGrupoDTO(id);
   }
 
   @GetMapping
@@ -46,14 +46,14 @@ public class GrupoController {
   @ResponseStatus(value = HttpStatus.CREATED)
   @PostMapping
   public GrupoDTO salvar(@Valid @RequestBody GrupoInputDTO grupoInputDTO) {
-      return cadastroGrupoService.salvar(grupoInputDTO);
+      return cadastroGrupoService.salvarGrupoDTO(grupoInputDTO);
   }
 
   @PutMapping(value = "/{id}")
   public GrupoDTO atualizar( @RequestBody @Valid GrupoInputDTO grupoInputDTO, @PathVariable Long id){
     Grupo grupoAtual = cadastroGrupoService.buscarOuFalhar(id);
     BeanUtils.copyProperties(grupoInputDTO, grupoAtual);
-    return cadastroGrupoService.salvar(grupoInputDTO);
+    return cadastroGrupoService.salvarGrupoDTO(grupoInputDTO);
   }
 
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
