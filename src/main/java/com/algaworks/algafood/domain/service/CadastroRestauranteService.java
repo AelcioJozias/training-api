@@ -62,6 +62,16 @@ public class CadastroRestauranteService {
         restaurante.desativar();
     }
 
+    @Transactional
+    public void ativar(List<Long> ids) {
+        ids.forEach(this::ativar);
+    }
+
+    @Transactional
+    public void desativar(List<Long> ids) {
+        ids.forEach(this::desativar);
+    }
+
     public Cidade buscarOuFalharCidade(Long id) {
         return cadastroCidadeService.buscarOuFalhar(id);
     }
@@ -106,4 +116,5 @@ public class CadastroRestauranteService {
         Usuario usuario = cadastroUsuarioService.buscarPorId(usuarioId);
         restaurante.removerResponsavel(usuario);
     }
+
 }
