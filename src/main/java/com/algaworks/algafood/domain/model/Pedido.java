@@ -27,6 +27,7 @@ public class Pedido {
 	@Embedded
 	private Endereco enderecoEntrega;
 
+	@Enumerated(EnumType.STRING)
 	private StatusPedido status;
 
 	@CreationTimestamp
