@@ -1,17 +1,17 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.assembler.PedidoDTOAssembler;
+import com.algaworks.algafood.api.assembler.PedidoInputDisassembler;
 import com.algaworks.algafood.api.assembler.PedidoResumoDTOAssembler;
 import com.algaworks.algafood.api.dto.PedidoDTO;
 import com.algaworks.algafood.api.dto.PedidoResumoDTO;
+import com.algaworks.algafood.api.dto.input.PedidoInput;
 import com.algaworks.algafood.domain.model.Pedido;
+import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.PedidoRepository;
 import com.algaworks.algafood.domain.service.EmissaoPedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,6 +31,9 @@ public class PedidoController {
     @Autowired
     PedidoResumoDTOAssembler pedidoResumoDTOAssembler;
 
+    @Autowired
+    PedidoInputDisassembler pedidoInputDisassembler;
+
     @GetMapping
     public List<PedidoResumoDTO> listar() {
         List<Pedido> todosPedidos = pedidoRepository.findAll();
@@ -40,6 +43,17 @@ public class PedidoController {
     @GetMapping("/{pedidoId}")
     public PedidoDTO buscar(@PathVariable Long pedidoId) {
         Pedido pedido = emissaoPedido.buscarOuFalhar(pedidoId);
+        return pedidoModelAssembler.toDTO(pedido);
+    }
+
+    @PostMapping
+    public PedidoDTO emitirPedido(@RequestBody PedidoInput pedidoInput) {
+
+        Pedido pedido = pedidoInputDisassembler.toDomainObject(pedidoInput);
+        pedido.setCliente(new Usuario());
+        pedido.getCliente().setId(1L);
+        pedido = emissaoPedido.emitir(pedido);
+
         return pedidoModelAssembler.toDTO(pedido);
     }
 

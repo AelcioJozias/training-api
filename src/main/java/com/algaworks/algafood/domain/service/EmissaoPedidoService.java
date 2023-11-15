@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class EmissaoPedidoService {
 
+    public static final String FORMA_DE_PAGAMENTO_NAO_ACEITA = "Forma de pagamento '%s' não é aceita por esse restaurante.";
+
     @Autowired
     private PedidoRepository pedidoRepository;
 
@@ -42,7 +44,6 @@ public class EmissaoPedidoService {
 
         pedido.setTaxaFrete(pedido.getRestaurante().getTaxaFrete());
         pedido.calcularValorTotal();
-        pedido.setStatus(StatusPedido.CRIADO);
         return pedidoRepository.save(pedido);
     }
 
@@ -69,7 +70,7 @@ public class EmissaoPedidoService {
         pedido.setFormaPagamento(formaPagamento);
 
         if (restaurante.naoAceitaFormaPagamento(formaPagamento)) {
-            throw new NegocioException(String.format("Forma de pagamento '%s' não é aceita por esse restaurante.",
+            throw new NegocioException(String.format(FORMA_DE_PAGAMENTO_NAO_ACEITA,
                     formaPagamento.getDescricao()));
         }
     }

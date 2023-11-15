@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.model;
 
+import com.algaworks.algafood.domain.exception.NegocioException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,51 +16,84 @@ import java.util.List;
 @Entity
 public class Pedido {
 
-	@EqualsAndHashCode.Include
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    private static final String STATUS_PEDIDO_NAO_PODE_SER_ALTERADO = "Status do pedido de id %d não pode ser alterado de %s para %s";
 
-	private BigDecimal subtotal;
-	private BigDecimal taxaFrete;
-	private BigDecimal valorTotal;
+    @EqualsAndHashCode.Include
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Embedded
-	private Endereco enderecoEntrega;
+    private BigDecimal subtotal;
+    private BigDecimal taxaFrete;
+    private BigDecimal valorTotal;
 
-	@Enumerated(EnumType.STRING)
-	private StatusPedido status;
+    @Embedded
+    private Endereco enderecoEntrega;
 
-	@CreationTimestamp
-	private OffsetDateTime dataCriacao;
+    @Enumerated(EnumType.STRING)
+    private StatusPedido status = StatusPedido.CRIADO;
 
-	private OffsetDateTime dataConfirmacao;
-	private OffsetDateTime dataCancelamento;
-	private OffsetDateTime dataEntrega;
+    @CreationTimestamp
+    private OffsetDateTime dataCriacao;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false)
-	private FormaPagamento formaPagamento;
+    private OffsetDateTime dataConfirmacao;
+    private OffsetDateTime dataCancelamento;
+    private OffsetDateTime dataEntrega;
 
-	@ManyToOne
-	@JoinColumn(nullable = false)
-	private Restaurante restaurante;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private FormaPagamento formaPagamento;
 
-	@ManyToOne
-	@JoinColumn(name = "usuario_cliente_id", nullable = false)
-	private Usuario cliente;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Restaurante restaurante;
 
-	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
-	private List<ItemPedido> itens = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "usuario_cliente_id", nullable = false)
+    private Usuario cliente;
 
-	public void calcularValorTotal() {
-		getItens().forEach(ItemPedido::calcularPrecoTotal);
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    private List<ItemPedido> itens = new ArrayList<>();
 
-		this.subtotal = getItens().stream()
-				.map(item -> item.getPrecoTotal())
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
+    private void setStatus(StatusPedido statusPedido) {
+        if (this.status.naoPodeAlterarPara(statusPedido)) {
+            throw new NegocioException(
+                    String.format(STATUS_PEDIDO_NAO_PODE_SER_ALTERADO,
+                            getId(), getStatus().getDescricao(),
+                            statusPedido.getDescricao()));
+        }
+        this.status = statusPedido;
+    }
 
-		this.valorTotal = this.subtotal.add(this.taxaFrete);
-	}
+    public void calcularValorTotal() {
+        getItens().forEach(ItemPedido::calcularPrecoTotal);
+
+        this.subtotal = getItens().stream()
+                .map(ItemPedido::getPrecoTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        this.valorTotal = this.subtotal.add(this.taxaFrete);
+    }
+
+    public void confirmar() {
+        this.setStatus(StatusPedido.CONFIRMADO);
+        this.setDataConfirmacao(OffsetDateTime.now());
+    }
+
+    public void entregar() {
+        this.setStatus(StatusPedido.ENTREGUE);
+        this.setDataConfirmacao(OffsetDateTime.now());
+    }
+
+    public void cancelar() {
+        this.setStatus(StatusPedido.CANCELADO);
+        this.setDataCancelamento(OffsetDateTime.now());
+    }
+
+    public void criar() {
+        this.setStatus(StatusPedido.CRIADO);
+        this.setDataCriacao(OffsetDateTime.now());
+    }
+
 
 }
