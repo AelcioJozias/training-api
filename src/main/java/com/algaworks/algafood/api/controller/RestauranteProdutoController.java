@@ -32,8 +32,18 @@ public class RestauranteProdutoController {
     ProdutoDisassembler produtoDisassembler;
 
     @GetMapping(value = "/{restauranteId}/produtos")
-    public List<ProdutoDTO> listar(@PathVariable Long restauranteId) {
-        List<Produto> produtos = cadastroProdutoService.listarProdutosDeUmRestaurante(restauranteId);
+    public List<ProdutoDTO> listar(@PathVariable Long restauranteId,
+                                   @RequestParam(required = false) boolean incluirInativos) {
+
+        List<Produto> produtos = null;
+
+        if(incluirInativos){
+            produtos = cadastroProdutoService.listarTodosOsProdutosDeUmRestaurante(restauranteId);
+        } else {
+            produtos = cadastroProdutoService.listarTodosOsProdutosAtivosDeUmResutaurante(restauranteId);
+        }
+
+
         return produtoAssemblerDTO.toCollectionDTO(produtos);
     }
 

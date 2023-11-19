@@ -24,13 +24,19 @@ public class CadastroProdutoService {
         return produtoRepository.findAll();
     }
 
-    public List<Produto> listarProdutosDeUmRestaurante(Long id) {
+    public List<Produto> listarTodosOsProdutosDeUmRestaurante(Long id) {
         Restaurante restaurante = restauranteService.buscarOuFalhar(id);
         return restaurante.getProdutos();
     }
 
+    public List<Produto> listarTodosOsProdutosAtivosDeUmResutaurante(Long restauranteId) {
+        Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
+        return produtoRepository.findProdutoByRestauranteAndAtivoTrue(restaurante);
+    }
+
+
     public Produto buscarOuFalhar(Long produtoId, Restaurante restaurante) {
-        return produtoRepository.findByIdAndRestaurante(produtoId, restaurante).orElseThrow(() -> new ProdutoNaoEncontradoException(
+        return produtoRepository.findProdutoByIdAndAndRestaurante(produtoId, restaurante).orElseThrow(() -> new ProdutoNaoEncontradoException(
                 String.format(NAO_EXISTE_UM_CADASTRO_DE_PRODUTO_COM_CODIGO_X_PARA_O_RESTAURANTE_DE_CODIGO_Y,
                         produtoId, restaurante.getId())));
     }

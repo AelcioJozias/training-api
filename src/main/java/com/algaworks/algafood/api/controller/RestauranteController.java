@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.algaworks.algafood.api.view.RestauranteView;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,9 +45,16 @@ public class RestauranteController {
   @Autowired
   private RestauranteDTODisassembler restauranteDTODisassembler;
 
+  @JsonView(RestauranteView.Resumo.class)
   @GetMapping
   public List<RestauranteDTO> listar() {
     return restauranDTOAssembler.toCollectionDTO(restauranteRepository.findAll());
+  }
+
+  @JsonView(RestauranteView.ApenasNome.class)
+  @GetMapping(params = "projecao=apenas-nome")
+  public List<RestauranteDTO> listarApenasNomes() {
+    return listar();
   }
 
   @GetMapping("/{restauranteId}")
