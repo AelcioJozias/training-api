@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,7 +28,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
-import com.algaworks.algafood.domain.exception.ValidacaoException;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
@@ -62,10 +62,15 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     return handleValidationInternal(ex, ex.getBindingResult(), headers, status, request);
   }
 
+  @Override
+  protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    return handleValidationInternal(ex, ex.getBindingResult(), headers, status, request);
+  }
+
   private ResponseEntity<Object> handleValidationInternal(Exception ex, BindingResult bindingResult,
-      HttpHeaders headers,
-      HttpStatus status, WebRequest request) {
-    ProblemType problemType = ProblemType.DADOS_INVALIDOS;
+                                                          HttpHeaders headers,
+                                                          HttpStatus status, WebRequest request) {
+
     String detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
 
     List<Problem.Object> problemObjects = bindingResult.getAllErrors().stream()
@@ -74,6 +79,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
           String name = objectError.getObjectName();
 
+          /* aqui estou verificando que não é um erro de objeto, mas sim um field do objeto, é que em algumas situações
+          * o erro pode ser o objeto, só que agora de cabeça, não me lembro um exemplo
+          * */
           if (objectError instanceof FieldError) {
             name = ((FieldError) objectError).getField();
           }
@@ -84,6 +92,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
               .build();
         })
         .collect(Collectors.toList());
+
+    ProblemType problemType = ProblemType.DADOS_INVALIDOS;
 
     Problem problem = createProblemBuilder(status, problemType, detail)
         .userMassege(detail)
