@@ -22,7 +22,7 @@ public class VendaQueryServiceImpl implements VendaQueryService {
 	private EntityManager manager;
 	
 	@Override
-	public List<VendaDiaria> consultarVendasDiarias(VendaDiariaFilter filtro) {
+	public List<VendaDiaria> consultarVendasDiarias(VendaDiariaFilter filtro, String timeOffSet) {
 
 		var builder = manager.getCriteriaBuilder(); // cria o builder
 		var query = builder.createQuery(VendaDiaria.class); // diz que o retorno de dados vai ser "encaixado" nesssa classe
@@ -39,9 +39,15 @@ public class VendaQueryServiceImpl implements VendaQueryService {
 			predicates.add(builder.lessThanOrEqualTo(root.get("dataCriacao"), filtro.getDataCriacaoFim()));
 		}
 
+		// convert the timezone of utc to the required time zone
+		var functionConvertTzDataCriacao = builder.function("convert_tz", Date.class, root.get("dataCriacao")
+			, builder.literal("+00:00"), builder.literal(timeOffSet));
+
+
 		// esse código é para fazer a função date do mysql
 		var functionDateDataCriacao = builder.function(
-				"date", Date.class, root.get("dataCriacao"));
+				"date", Date.class, functionConvertTzDataCriacao);
+
 
 
 		// aqui tá sendo construido um bloco select cm o criteria
