@@ -2,8 +2,6 @@ package com.algaworks.algafood.api.dto;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-
 @Data
 public class PermissaoDTO {
 

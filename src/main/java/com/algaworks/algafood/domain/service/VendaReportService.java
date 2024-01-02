@@ -2,9 +2,6 @@ package com.algaworks.algafood.domain.service;
 
 import com.algaworks.algafood.domain.enums.DocumentType;
 import com.algaworks.algafood.domain.filter.VendaDiariaFilter;
-import org.springframework.http.ResponseEntity;
-
-import java.util.Optional;
 
 public interface VendaReportService {
 

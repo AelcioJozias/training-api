@@ -2,7 +2,6 @@ package com.algaworks.algafood.domain.enums;
 
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public enum DocumentType {
