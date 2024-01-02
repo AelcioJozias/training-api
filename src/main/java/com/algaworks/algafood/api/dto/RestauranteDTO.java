@@ -1,12 +1,12 @@
 package com.algaworks.algafood.api.dto;
 
+import java.math.BigDecimal;
+
 import com.algaworks.algafood.api.view.RestauranteView;
-import com.algaworks.algafood.domain.model.Endereco;
 import com.fasterxml.jackson.annotation.JsonView;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import java.math.BigDecimal;
 
 @Getter
 @Setter

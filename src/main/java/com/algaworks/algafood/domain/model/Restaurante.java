@@ -62,23 +62,29 @@ public class Restaurante {
     @Column(nullable = false, columnDefinition = "datetime")
     private OffsetDateTime dataAtualizacao;
 
+    @Builder.Default
     @ManyToMany
     @JoinTable(name = "restaurante_forma_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"),
             inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
     private Set<FormaPagamento> formasPagamento = new HashSet<>();
 
+        @Builder.Default
+
     @OneToMany(mappedBy = "restaurante")
     private List<Produto> produtos = new ArrayList<>();
 
+    @Builder.Default
     @ManyToMany
     @JoinTable(name = "restaurante_usuario_responsavel",
     joinColumns = @JoinColumn(name = "restaurante_id"),
     inverseJoinColumns = @JoinColumn(name = "usuario_id"))
     private Set<Usuario> responsaveis = new HashSet<>();
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean ativo = Boolean.TRUE;
-
+    
+    @Builder.Default
     private boolean aberto = Boolean.TRUE;
 
     public void abrir() {

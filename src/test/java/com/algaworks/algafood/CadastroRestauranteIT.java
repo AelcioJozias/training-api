@@ -2,12 +2,9 @@ package com.algaworks.algafood;
 
 import static io.restassured.RestAssured.basePath;
 import static io.restassured.RestAssured.enableLoggingOfRequestAndResponseIfValidationFails;
-import static io.restassured.RestAssured.get;
-import static io.restassured.RestAssured.when;
 
 import java.io.IOException;
 
-import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
