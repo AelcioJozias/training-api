@@ -1,4 +1,4 @@
-package com.algaworks.algafood.domain.model.dto;
+package com.algaworks.algafood.api.dto.input;
 
 import java.math.BigDecimal;
 import java.util.Date;
