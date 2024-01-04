@@ -9,6 +9,7 @@ import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.repository.ProdutoRepository;
 import com.algaworks.algafood.domain.service.CadastroProdutoService;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
+import com.algaworks.algafood.domain.service.CatalogoFotoProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class RestauranteProdutoFotoController {
 
-    @Autowired
-    ProdutoRepository produtoRepository;
 
     @Autowired
     CadastroRestauranteService cadastroRestauranteService;
@@ -35,6 +34,9 @@ public class RestauranteProdutoFotoController {
 
     @Autowired
     FotoProdutoModelAssembler fotoProdutoModelAssembler;
+
+    @Autowired
+    CatalogoFotoProdutoService catalogoFotoProdutoService;
 
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -52,7 +54,7 @@ public class RestauranteProdutoFotoController {
         fotoProduto.setTamanho(arquivo.getSize());
 
 
-        fotoProduto = produtoRepository.save(fotoProduto);
+        fotoProduto = catalogoFotoProdutoService.salvar(fotoProduto);
 
         return fotoProdutoModelAssembler.toDTO(fotoProduto);
 
