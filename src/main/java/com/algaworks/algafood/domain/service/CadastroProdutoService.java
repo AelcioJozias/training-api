@@ -41,6 +41,12 @@ public class CadastroProdutoService {
                         produtoId, restaurante.getId())));
     }
 
+    public Produto buscarOuFalhar(Long produtoId, Long restauranteId) {
+        return produtoRepository.findById(produtoId, restauranteId).orElseThrow(() -> new ProdutoNaoEncontradoException(
+                String.format(NAO_EXISTE_UM_CADASTRO_DE_PRODUTO_COM_CODIGO_X_PARA_O_RESTAURANTE_DE_CODIGO_Y,
+                        produtoId, restauranteId)));
+    }
+
     @Transactional
     public Produto salvar(Produto produto) {
         return produtoRepository.save(produto);
