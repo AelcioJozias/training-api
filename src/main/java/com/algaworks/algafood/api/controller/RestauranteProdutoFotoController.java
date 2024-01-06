@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.algaworks.algafood.api.dto.input.FotoProdutoInput;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping(value = "/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
 
@@ -40,7 +42,7 @@ public class RestauranteProdutoFotoController {
 
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public FotoProdutoDTO atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId, @Valid FotoProdutoInput fotoProdutoInput) {
+    public FotoProdutoDTO atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId, @Valid FotoProdutoInput fotoProdutoInput) throws IOException {
 
         MultipartFile arquivo = fotoProdutoInput.getArquivo();
         Produto produto = cadastroProdutoService.buscarOuFalhar(produtoId, restauranteId);
@@ -54,7 +56,7 @@ public class RestauranteProdutoFotoController {
         fotoProduto.setTamanho(arquivo.getSize());
 
 
-        fotoProduto = catalogoFotoProdutoService.salvar(fotoProduto);
+        fotoProduto = catalogoFotoProdutoService.salvar(fotoProduto, fotoProdutoInput.getArquivo().getInputStream());
 
         return fotoProdutoModelAssembler.toDTO(fotoProduto);
 

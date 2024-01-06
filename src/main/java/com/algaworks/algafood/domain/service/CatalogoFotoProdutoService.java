@@ -5,22 +5,43 @@ import com.algaworks.algafood.domain.repository.ProdutoRepository;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
 import java.util.Optional;
 
 @Service
 public class CatalogoFotoProdutoService {
 
     @Autowired
-    ProdutoRepository produtoRepository;
+    private ProdutoRepository produtoRepository;
 
-    public FotoProduto salvar(FotoProduto fotoProduto) {
+    @Autowired
+    private FotoStorageService fotoStorageService;
 
+    @Transactional
+    public FotoProduto salvar(FotoProduto fotoProduto, InputStream fileInputStream) {
+        String nomeProdutoExistente = null;
         Optional<FotoProduto> optionalFotoProduto = produtoRepository
                 .findFotoById(fotoProduto.getProduto().getId(), fotoProduto.getRestauranteId());
 
-        optionalFotoProduto.ifPresent(produto -> produtoRepository.delete(produto));
+        if(optionalFotoProduto.isPresent()) {
+            produtoRepository.delete(optionalFotoProduto.get());
+            nomeProdutoExistente = optionalFotoProduto.get().getNomeArquivo();
+        }
 
-        return produtoRepository.save(fotoProduto);
+        fotoProduto.setNomeArquivo(fotoStorageService.gerarNomeArquivo(fotoProduto.getNomeArquivo()));
+        fotoProduto = produtoRepository.save(fotoProduto);
+        produtoRepository.flush();
+
+        fotoStorageService.substituir(
+                FotoStorageService.NovaFoto.builder()
+                .inputStream(fileInputStream)
+                .nomeFoto(fotoProduto.getNomeArquivo())
+                .build(), nomeProdutoExistente
+        );
+
+
+        return fotoProduto;
     }
 }
