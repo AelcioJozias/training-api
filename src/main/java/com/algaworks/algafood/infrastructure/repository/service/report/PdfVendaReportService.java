@@ -60,7 +60,7 @@ public class PdfVendaReportService implements VendaReportService {
                 // Instancia exporter do tipo xls
                 JRXlsxExporter exporter = new JRXlsxExporter();
 
-                // instancia do ste
+                // instancia do outputStream
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
                 // SET do tipo de arquivo que vai ser
