@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.service;
 
+import com.algaworks.algafood.domain.exception.FotoNaoEncontradaException;
 import com.algaworks.algafood.domain.model.FotoProduto;
 import com.algaworks.algafood.domain.repository.ProdutoRepository;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +42,11 @@ public class CatalogoFotoProdutoService {
                 .build(), nomeProdutoExistente
         );
 
-
         return fotoProduto;
+    }
+
+    @Transactional
+    public FotoProduto buscarOuFalhar(Long fotoProdutoId, Long restauranteId) {
+        return produtoRepository.findFotoById(fotoProdutoId, restauranteId).orElseThrow(() -> new FotoNaoEncontradaException(restauranteId, fotoProdutoId));
     }
 }

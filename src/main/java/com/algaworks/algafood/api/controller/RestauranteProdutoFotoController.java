@@ -12,10 +12,7 @@ import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 import com.algaworks.algafood.domain.service.CatalogoFotoProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.algaworks.algafood.api.dto.input.FotoProdutoInput;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,8 +56,10 @@ public class RestauranteProdutoFotoController {
         fotoProduto = catalogoFotoProdutoService.salvar(fotoProduto, fotoProdutoInput.getArquivo().getInputStream());
 
         return fotoProdutoModelAssembler.toDTO(fotoProduto);
-
-
     }
 
+    @GetMapping
+    public FotoProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
+        return fotoProdutoModelAssembler.toDTO(catalogoFotoProdutoService.buscarOuFalhar(produtoId, restauranteId));
+    }
 }
