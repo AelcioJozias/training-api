@@ -96,4 +96,11 @@ public class RestauranteProdutoFotoController {
         if(!compativel)
             throw new HttpMediaTypeNotAcceptableException(contentTypesAccepted);
     }
+
+    @DeleteMapping
+    public void excluir(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
+        FotoProduto fotoProduto = catalogoFotoProdutoService.buscarOuFalhar(produtoId, restauranteId);
+        catalogoFotoProdutoService.excluirFotoProduto(fotoProduto);
+    }
+
 }

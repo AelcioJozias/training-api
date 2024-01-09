@@ -110,6 +110,12 @@ public class CadastroRestauranteService {
 
     @Transactional
     public void removerResponsavel(Long restauranteId, Long usuarioId) {
+        // dúvidas pro vini
+        /*
+        * é mais correto fazer uma exclusão da maneira abaixo
+        * ou fazer logo um sql pra deletar, junto de um trycatch,
+        * para caso não exista o rescurso??
+        * */
         Restaurante restaurante = buscarOuFalhar(restauranteId);
         Usuario usuario = cadastroUsuarioService.buscarPorId(usuarioId);
         restaurante.removerResponsavel(usuario);
