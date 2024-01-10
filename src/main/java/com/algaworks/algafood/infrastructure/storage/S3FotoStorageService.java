@@ -48,7 +48,9 @@ public class S3FotoStorageService implements FotoStorageService {
 
     @Override
     public void remover(String nomeFoto) {
-
+        var nomeArquivo = getCaminhoArquivo(nomeFoto);
+        var deleteObejctRequest = new DeleteObjectRequest(storageProperties.getS3().getBucket(), nomeArquivo);
+        amazonS3.deleteObject(deleteObejctRequest);
     }
 
     private String getCaminhoArquivo(String nomeArquivo) {
