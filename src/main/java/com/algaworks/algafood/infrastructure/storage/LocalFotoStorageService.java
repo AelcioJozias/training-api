@@ -17,14 +17,16 @@ import java.nio.file.Path;
 //@Service
 public class LocalFotoStorageService implements FotoStorageService {
 
-//    @Autowired
+    @Autowired
     private StorageProperties storageProperties;
 
     @Override
-    public InputStream recuperar(String nomeArquivo) {
+    public FotoRecuperada recuperar(String nomeArquivo) {
         try {
             Path arquivoPath = Path.of(nomeArquivo);
-            return Files.newInputStream(storageProperties.getLocal().getDiretorioFotos().resolve(arquivoPath));
+            return FotoRecuperada.builder()
+                    .inputStream(Files.newInputStream(storageProperties.getLocal().getDiretorioFotos().resolve(arquivoPath)))
+                    .build();
         } catch (Exception e) {
             throw new StorageException("Não foi possível recuperar o arquivo", e);
         }
@@ -32,8 +34,8 @@ public class LocalFotoStorageService implements FotoStorageService {
 
     @Override
     public void armazenar(NovaFoto novaFoto) {
-        Path arquivoPath =  getArquivoPath(novaFoto.getNomeFoto());
         try {
+            Path arquivoPath =  getArquivoPath(novaFoto.getNomeFoto());
             FileCopyUtils.copy(novaFoto.getInputStream(), Files.newOutputStream(arquivoPath));
         } catch (Exception e) {
             throw new StorageException("Não foi possível armazenar o arquivo", e);

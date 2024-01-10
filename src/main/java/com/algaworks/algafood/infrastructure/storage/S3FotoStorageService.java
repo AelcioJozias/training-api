@@ -23,8 +23,11 @@ public class S3FotoStorageService implements FotoStorageService {
     AmazonS3 amazonS3;
 
     @Override
-    public InputStream recuperar(String nomeArquivo) {
-        return null;
+    public FotoRecuperada recuperar(String nomeArquivo) {
+
+        return FotoRecuperada.builder()
+                .url(amazonS3.getUrl(storageProperties.getS3().getBucket(), getCaminhoArquivo(nomeArquivo)).toString())
+                .build();
     }
 
     @Override

@@ -11,8 +11,10 @@ import com.algaworks.algafood.domain.service.CadastroProdutoService;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 import com.algaworks.algafood.domain.service.CatalogoFotoProdutoService;
 import com.algaworks.algafood.domain.service.FotoStorageService;
+import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
@@ -77,14 +79,25 @@ public class RestauranteProdutoFotoController {
             throws HttpMediaTypeNotAcceptableException {
         try {
             FotoProduto fotoProduto = catalogoFotoProdutoService.buscarOuFalhar(produtoId, restauranteId);
-            InputStream fotoInputStream = fotoStorageService.recuperar(fotoProduto.getNomeArquivo());
+
             List<MediaType> contentTypesAccepted = MediaType.parseMediaTypes(mediaTypeRequest);
             MediaType fotoMediaType = MediaType.parseMediaType(fotoProduto.getContentType());
             verificarCompatibilidadeMediaType(contentTypesAccepted, fotoMediaType);
 
-            return ResponseEntity.ok()
-                    .contentType(fotoMediaType)
-                    .body(new InputStreamResource(fotoInputStream));
+            FotoStorageService.FotoRecuperada fotoRecuperada = fotoStorageService.recuperar(fotoProduto.getNomeArquivo());
+
+            if(fotoRecuperada.temUrl()) {
+                return ResponseEntity
+                        .status(HttpStatus.FOUND)
+                        .header(HttpHeaders.LOCATION, fotoRecuperada.getUrl())
+                        .build();
+            } else {
+                return ResponseEntity.ok()
+                        .contentType(fotoMediaType)
+                        .body(new InputStreamResource(fotoRecuperada.getInputStream()));
+            }
+
+
         } catch (EntidadeNaoEncontradaException e) {
             return ResponseEntity.notFound()
                     .build();
