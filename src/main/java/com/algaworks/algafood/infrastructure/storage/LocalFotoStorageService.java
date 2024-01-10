@@ -14,10 +14,10 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-@Service
+//@Service
 public class LocalFotoStorageService implements FotoStorageService {
 
-    @Autowired
+//    @Autowired
     private StorageProperties storageProperties;
 
     @Override
@@ -50,12 +50,6 @@ public class LocalFotoStorageService implements FotoStorageService {
         }
     }
 
-    @Override
-    public void substituir(NovaFoto novaFoto, String nomeFotoExistente) {
-        armazenar(novaFoto);
-        if(nomeFotoExistente != null)
-            remover(nomeFotoExistente);
-    }
 
     private Path getArquivoPath(String nomeArquivo) {
         return storageProperties.getLocal().getDiretorioFotos().resolve(nomeArquivo);

@@ -14,7 +14,11 @@ public interface FotoStorageService {
 
     void remover(String nomeFoto);
 
-    void substituir(NovaFoto novaFoto, String nomeFotoExistente);
+    default void substituir(NovaFoto novaFoto, String nomeFotoExistente) {
+        armazenar(novaFoto);
+        if(nomeFotoExistente != null)
+            remover(nomeFotoExistente);
+    }
 
     default String gerarNomeArquivo(String nomeArquivo) {
         return UUID.randomUUID() + "_" + nomeArquivo;
@@ -25,5 +29,6 @@ public interface FotoStorageService {
     class NovaFoto {
         private String nomeFoto;
         private InputStream inputStream;
+        private String contentType;
     }
 }

@@ -37,9 +37,11 @@ public class CatalogoFotoProdutoService {
 
         fotoStorageService.substituir(
                 FotoStorageService.NovaFoto.builder()
-                .inputStream(fileInputStream)
-                .nomeFoto(fotoProduto.getNomeArquivo())
-                .build(), nomeProdutoExistente
+                        .inputStream(fileInputStream)
+                        .nomeFoto(fotoProduto.getNomeArquivo())
+                        .contentType(fotoProduto.getContentType())
+                        .build(),
+                nomeProdutoExistente
         );
 
         return fotoProduto;
