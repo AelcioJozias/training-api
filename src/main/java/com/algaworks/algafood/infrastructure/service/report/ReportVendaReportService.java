@@ -1,4 +1,4 @@
-package com.algaworks.algafood.infrastructure.repository.service.report;
+package com.algaworks.algafood.infrastructure.service.report;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -26,7 +26,7 @@ import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 
 @Service
-public class PdfVendaReportService implements VendaReportService {
+public class ReportVendaReportService implements VendaReportService {
 
     @Autowired
     VendaQueryService vendaQueryService;
