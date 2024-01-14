@@ -29,6 +29,7 @@
         <jasper.reposrts.functions.version>6.21.0</jasper.reposrts.functions.version>
         <aws.sdk.service.s3.version>1.12.633</aws.sdk.service.s3.version>
         <spring.boot.starter.mail>2.4.3</spring.boot.starter.mail>
+        <freemarker.version>2.3.10</freemarker.version>
     </properties>
 
     <dependencies>
@@ -124,6 +125,12 @@
             <artifactId>spring-boot-starter-mail</artifactId>
             <version>${spring.boot.starter.mail}</version>
         </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.31</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
