@@ -7,13 +7,11 @@ import freemarker.template.Template;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import javax.mail.internet.MimeMessage;
-import java.io.IOException;
+import java.util.Locale;
 
-@Service
 public class SmtpEnvioEmailService implements EnvioEmailService {
 
     @Autowired
@@ -45,9 +43,14 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
 
     }
 
-    private String processarTemplateDoEmail(Menssagem menssagem) throws Exception{
+    protected String processarTemplateDoEmail(Menssagem menssagem) {
+        try {
             Template template = freemakerConfiguration.getTemplate(menssagem.getCorpo());
+            template.setLocale(new Locale("pt", "BR"));
             return FreeMarkerTemplateUtils.processTemplateIntoString(template, menssagem.getVariaveis());
+        } catch (Exception e) {
+            throw new EmailException("Não foi possível processar o template", e);
+        }
     }
 
 
