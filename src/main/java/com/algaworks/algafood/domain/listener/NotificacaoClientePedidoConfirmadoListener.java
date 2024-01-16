@@ -6,6 +6,7 @@ import com.algaworks.algafood.domain.service.EnvioEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 public class NotificacaoClientePedidoConfirmadoListener {
@@ -13,7 +14,9 @@ public class NotificacaoClientePedidoConfirmadoListener {
     @Autowired
     private EnvioEmailService envioEmailService;
 
-    @EventListener
+    // essa anotacao por padrão executa o evento apenas após o commit no banco, essa opção pode ser mudada passando
+    // um argumento como valor para a anotação
+    @TransactionalEventListener
     public void aoConfirmarPedido(PedidoConfirmadoEvent event) {
         Pedido pedido = event.getPedido();
 
