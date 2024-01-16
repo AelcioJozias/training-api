@@ -83,7 +83,6 @@ public class Pedido extends AbstractAggregateRoot<Pedido> {
     public void confirmar() {
         this.setStatus(StatusPedido.CONFIRMADO);
         this.setDataConfirmacao(OffsetDateTime.now());
-
         registerEvent(new PedidoConfirmadoEvent(this));
     }
 

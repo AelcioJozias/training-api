@@ -26,15 +26,6 @@ public class FluxoPedidoService {
         // adicionado o save explicitamente para que o evento seja registrado.( registerEvent(new PedidoConfirmadoEvent(this)); )
         pedidoRepository.save(pedido);
 
-
-//        var menssagem = EnvioEmailService.Menssagem.builder()
-//                .assunto(pedido.getRestaurante().getNome() + " - Pedido confirmado")
-//                .corpo("pedido-confirmado.html")
-//                .variavel("pedido", pedido)
-//                .destinatario(pedido.getCliente().getEmail())
-//                .build();
-//
-//        envioEmailService.enviar(menssagem);
 	}
 
   @Transactional
