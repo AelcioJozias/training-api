@@ -37,12 +37,14 @@ public class RestauranteController {
   @Autowired
   private RestauranteDTODisassembler restauranteDTODisassembler;
 
+  // para esse filtro do json view funcionar, tem que lembrar de fazer a mesma anotacao encima do atributo da classe
   @JsonView(RestauranteView.Resumo.class)
   @GetMapping
   public List<RestauranteDTO> listar() {
     return restauranDTOAssembler.toCollectionDTO(restauranteRepository.findAll());
   }
 
+  // para esse filtro do json view funcionar, tem que lembrar de fazer a mesma anotacao encima do atributo da classe
   @JsonView(RestauranteView.ApenasNome.class)
   @GetMapping(params = "projecao=apenas-nome")
   public List<RestauranteDTO> listarApenasNomes() {
