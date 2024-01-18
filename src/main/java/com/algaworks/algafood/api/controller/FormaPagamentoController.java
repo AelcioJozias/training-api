@@ -21,8 +21,11 @@ public class FormaPagamentoController {
     CadastroFormaPagamentoService cadastroFormaPagamentoService;
 
     @GetMapping(value = "/{id}")
-    public FormaPagamentoDTO buscarPorId(@PathVariable Long id) {
-        return cadastroFormaPagamentoService.buscarPorId(id);
+    public ResponseEntity<FormaPagamentoDTO> buscarPorId(@PathVariable Long id) {
+        FormaPagamentoDTO formaPagamento = cadastroFormaPagamentoService.buscarPorId(id);
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(formaPagamento);
     }
 
     @GetMapping
