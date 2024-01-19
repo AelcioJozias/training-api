@@ -28,9 +28,14 @@ public class FormaPagamentoController {
     FormaPagamentoRepository formaPagamentoRepository;
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<FormaPagamentoDTO> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<FormaPagamentoDTO> buscarPorId(@PathVariable Long id, ServletWebRequest request) {
+        String eTag = cadastroFormaPagamentoService.genereteEtag(request);
+        if(request.checkNotModified(eTag)) {
+            return null;
+        }
         FormaPagamentoDTO formaPagamento = cadastroFormaPagamentoService.buscarPorId(id);
         return ResponseEntity.ok()
+                .eTag(eTag)
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
                 .body(formaPagamento);
     }
@@ -38,19 +43,7 @@ public class FormaPagamentoController {
     @GetMapping
                                                                             //injecao do serlet request
     public ResponseEntity<List<FormaPagamentoDTO>> listarFormasPagamento(ServletWebRequest request) {
-        // desabilitando o etag que é gerado automaticamente, devido a instancia de bean na classe WebConfig, desse projeto
-        ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
-        //
-
-        // definido pra zero, caso não encontre um registro no banco
-        String eTag = "0";
-
-        OffsetDateTime dataUltimaAtualizacao = formaPagamentoRepository.getUltimaAtualizacaoDataPagamento();
-
-
-        if (dataUltimaAtualizacao != null) {
-            eTag = String.valueOf(dataUltimaAtualizacao.toEpochSecond());
-        }
+        String eTag = cadastroFormaPagamentoService.genereteEtag(request);
 
         // verifica se não ouve modificacao no eTeg, se não houve retornar null,
         // o método abaixo também adiciona o Eteg no cabeçalho e já faz o set do status http
@@ -62,6 +55,7 @@ public class FormaPagamentoController {
 
         List<FormaPagamentoDTO> formasPagamento = cadastroFormaPagamentoService.listarFormasPagamento();
         return ResponseEntity.ok()
+                .eTag(eTag)
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
                 .body(formasPagamento);
     }

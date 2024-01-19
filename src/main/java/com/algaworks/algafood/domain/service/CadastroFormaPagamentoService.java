@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.service;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -17,6 +18,8 @@ import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.FormaPagamentoNaoEncontradaException;
 import com.algaworks.algafood.domain.model.FormaPagamento;
 import com.algaworks.algafood.domain.repository.FormaPagamentoRepository;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 @Service
 public class CadastroFormaPagamentoService {
@@ -68,5 +71,21 @@ public class CadastroFormaPagamentoService {
         } catch (EmptyResultDataAccessException e) {
           throw new FormaPagamentoNaoEncontradaException(id);
         }
+    }
+
+    public String genereteEtag(ServletWebRequest request) {
+        // desabilitando o etag que é gerado automaticamente, devido a instancia de bean na classe WebConfig, desse projeto
+        ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+
+        // definido pra zero, caso não encontre um registro no banco
+        String eTag = "0";
+
+        OffsetDateTime dataUltimaAtualizacao = formaPagamentoRepository.getMaxValueDataAtualizacao();
+
+
+        if (dataUltimaAtualizacao != null) {
+            eTag = String.valueOf(dataUltimaAtualizacao.toEpochSecond());
+        }
+        return eTag;
     }
 }
