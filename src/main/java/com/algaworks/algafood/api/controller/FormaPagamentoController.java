@@ -2,14 +2,18 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.dto.FormaPagamentoDTO;
 import com.algaworks.algafood.api.dto.input.FormaPagamentoInputDTO;
+import com.algaworks.algafood.domain.repository.FormaPagamentoRepository;
 import com.algaworks.algafood.domain.service.CadastroFormaPagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 import javax.validation.Valid;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +24,9 @@ public class FormaPagamentoController {
     @Autowired
     CadastroFormaPagamentoService cadastroFormaPagamentoService;
 
+    @Autowired
+    FormaPagamentoRepository formaPagamentoRepository;
+
     @GetMapping(value = "/{id}")
     public ResponseEntity<FormaPagamentoDTO> buscarPorId(@PathVariable Long id) {
         FormaPagamentoDTO formaPagamento = cadastroFormaPagamentoService.buscarPorId(id);
@@ -29,7 +36,30 @@ public class FormaPagamentoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FormaPagamentoDTO>> listarFormasPagamento() {
+                                                                            //injecao do serlet request
+    public ResponseEntity<List<FormaPagamentoDTO>> listarFormasPagamento(ServletWebRequest request) {
+        // desabilitando o etag que é gerado automaticamente, devido a instancia de bean na classe WebConfig, desse projeto
+        ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+        //
+
+        // definido pra zero, caso não encontre um registro no banco
+        String eTag = "0";
+
+        OffsetDateTime dataUltimaAtualizacao = formaPagamentoRepository.getUltimaAtualizacaoDataPagamento();
+
+
+        if (dataUltimaAtualizacao != null) {
+            eTag = String.valueOf(dataUltimaAtualizacao.toEpochSecond());
+        }
+
+        // verifica se não ouve modificacao no eTeg, se não houve retornar null,
+        // o método abaixo também adiciona o Eteg no cabeçalho e já faz o set do status http
+        // É recomendado por documentacao apenas dar o retorno null, como o método já fez todos os presets
+        // necessários para quando for true
+        if (request.checkNotModified(eTag)) {
+            return null;
+        }
+
         List<FormaPagamentoDTO> formasPagamento = cadastroFormaPagamentoService.listarFormasPagamento();
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
