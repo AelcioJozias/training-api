@@ -30,6 +30,7 @@
         <aws.sdk.service.s3.version>1.12.633</aws.sdk.service.s3.version>
         <spring.boot.starter.mail>2.4.3</spring.boot.starter.mail>
         <freemarker.version>2.3.10</freemarker.version>
+        <spring-fox.version>2.9.2</spring-fox.version>
     </properties>
 
     <dependencies>
@@ -98,6 +99,12 @@
             <groupId>com.github.bohnman</groupId>
             <artifactId>squiggly-filter-jackson</artifactId>
             <version>${squiggly.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
@@ -131,6 +138,11 @@
             <version>2.3.31</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${spring-fox.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
