@@ -7,6 +7,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +30,7 @@ import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
-
+@Api(tags = "Cidade")
 @RestController
 @RequestMapping(value = "/cidades")
 public class CidadeController {
@@ -44,16 +47,19 @@ public class CidadeController {
 	@Autowired
 	private CidadeDTODisassembler cidadeDTODisassembler;
 
+	@ApiOperation("Lista as cidades")
 	@GetMapping
 	public List<Cidade> listar() {
 		return cidadeRepository.findAll();
 	}
 
+	@ApiOperation("Busca cidade por id")
 	@GetMapping("/{cidadeId}")
 	public CidadeDTO buscar(@PathVariable Long cidadeId) {
 		return cidadeDTOAssembler.toDTO(cadastroCidade.buscarOuFalhar(cidadeId));
 	}
 
+	@ApiOperation("Cria uma cidade")
 	@PostMapping
 	@ResponseStatus(value = CREATED)
 	public CidadeDTO adicionar(@Valid @RequestBody CidadeInputDTO cidadeInputDTO) {
@@ -67,6 +73,7 @@ public class CidadeController {
 		return cidadeDTOAssembler.toDTO(cadastroCidade.salvar(cidade));
 	}
 
+	@ApiOperation("Atualiza uma cidade existente")
 	@PutMapping("/{cidadeId}")
 	public CidadeDTO atualizar(@PathVariable Long cidadeId, @Valid @RequestBody CidadeInputDTO cidadeInputDTO) {
 		Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(cidadeId);
@@ -79,6 +86,7 @@ public class CidadeController {
 		return cidadeDTOAssembler.toDTO(cidadeAtual);
 	}
 
+	@ApiOperation("Exclui uma cidade")
 	@ResponseStatus(NO_CONTENT)
 	@DeleteMapping("/{cidadeId}")
 	public void remover(@PathVariable Long cidadeId) {
