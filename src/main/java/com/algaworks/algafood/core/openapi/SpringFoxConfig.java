@@ -5,8 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -32,7 +35,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .paths(PathSelectors.any()) // -> esse já o valor padrão, está aqui apenas para referência
                 // no exemplo abaixo pegaria apenas os endpoints que começacem com restaurantes
                 //.paths(PathSelectors.regex("/restaurantes"))
-                .build();
+                .build()
+                .apiInfo(apiInfo());
     }
 
     /**
@@ -56,4 +60,12 @@ public class SpringFoxConfig implements WebMvcConfigurer {
         // Obs: esses arquivos são pegos do swagger-ui.
     }
 
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+                .title("Trainig Api")
+                .description("Api apenas para treinamento")
+                .contact(new Contact("Training Api", "http.trainingapi.com", "traningapi@gmail.com"))
+                .version("1")
+                .build();
+    }
 }
