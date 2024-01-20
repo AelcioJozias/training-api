@@ -3,6 +3,8 @@ package com.algaworks.algafood.core.openapi;
 import com.algaworks.algafood.domain.model.Restaurante;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -10,7 +12,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-public class SpringFoxConfig {
+public class SpringFoxConfig implements WebMvcConfigurer {
 
 
     /**
@@ -28,4 +30,26 @@ public class SpringFoxConfig {
                 .apis(RequestHandlerSelectors.any())
                 .build();
     }
+
+    /**
+     *  Sobreescrita do método que faz a configuração de recursos para ficar acessíveis.
+     *
+      * @param registry
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
+        /**
+         * addResourceHandler: o arquivo(s) que desejamos dicionar.
+         * addResourceLocations: o path para chegar nesse arquivo.
+          */
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+
+        // Obs: esses arquivos são pegos do swagger-ui.
+    }
+
 }

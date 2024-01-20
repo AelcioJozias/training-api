@@ -11,7 +11,9 @@ import javax.servlet.Filter;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    // esse bean ativa o CORS global no projeto
+    /*
+     esse bean ativa o CORS global no projeto
+     */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
