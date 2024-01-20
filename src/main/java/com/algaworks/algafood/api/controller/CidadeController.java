@@ -9,6 +9,7 @@ import javax.validation.Valid;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -55,14 +56,18 @@ public class CidadeController {
 
 	@ApiOperation("Busca cidade por id")
 	@GetMapping("/{cidadeId}")
-	public CidadeDTO buscar(@PathVariable Long cidadeId) {
+	// @ApiParam: Atencao quando for um tipo inteiro, colocar um exemplo pra não dar excecao,
+	// talvez tenha que fazer isso pra String também, quando é um objeto nao precisa
+	public CidadeDTO buscar(@ApiParam(value = "Id de uma cidade", example = "1") @PathVariable Long cidadeId) {
 		return cidadeDTOAssembler.toDTO(cadastroCidade.buscarOuFalhar(cidadeId));
 	}
 
 	@ApiOperation("Cria uma cidade")
 	@PostMapping
 	@ResponseStatus(value = CREATED)
-	public CidadeDTO adicionar(@Valid @RequestBody CidadeInputDTO cidadeInputDTO) {
+	public CidadeDTO adicionar(
+			@ApiParam(name = "corpo", value = "Representação de uma cidade com os novos dados")
+			@Valid @RequestBody CidadeInputDTO cidadeInputDTO) {
 		Cidade cidade = cidadeDTODisassembler.toDomainObject(cidadeInputDTO);
 		try {
 			if (cidade.getEstado() != null)
@@ -75,7 +80,9 @@ public class CidadeController {
 
 	@ApiOperation("Atualiza uma cidade existente")
 	@PutMapping("/{cidadeId}")
-	public CidadeDTO atualizar(@PathVariable Long cidadeId, @Valid @RequestBody CidadeInputDTO cidadeInputDTO) {
+	public CidadeDTO atualizar(@ApiParam(value = "Id de uma cidade", example = "1") @PathVariable Long cidadeId,
+							   @ApiParam(name = "corpo", value = "Representação de uma cidade com os novos dados")
+							   @Valid @RequestBody CidadeInputDTO cidadeInputDTO) {
 		Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(cidadeId);
 		cidadeDTODisassembler.copyToDomainObject(cidadeInputDTO, cidadeAtual);
 		try {
@@ -89,7 +96,8 @@ public class CidadeController {
 	@ApiOperation("Exclui uma cidade")
 	@ResponseStatus(NO_CONTENT)
 	@DeleteMapping("/{cidadeId}")
-	public void remover(@PathVariable Long cidadeId) {
+	public void remover(@ApiParam(value = "Id de uma cidade", example = "1")
+							@PathVariable Long cidadeId) {
 		cadastroCidade.excluir(cidadeId);
 	}
 }
