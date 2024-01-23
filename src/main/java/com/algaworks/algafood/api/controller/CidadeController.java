@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.algaworks.algafood.api.controller.openapi.CidadeControllerOpenApi;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,47 +33,37 @@ import com.algaworks.algafood.domain.service.CadastroCidadeService;
 @Api(tags = "Cidade")
 @RestController
 @RequestMapping(value = "/cidades")
-public class CidadeController {
+public class CidadeController implements CidadeControllerOpenApi {
 
-	@Autowired
-	private CidadeRepository cidadeRepository;
+	private final CidadeRepository cidadeRepository;
+	private final CadastroCidadeService cadastroCidade;
+	private final CidadeDTOAssembler cidadeDTOAssembler;
+	private final CidadeDTODisassembler cidadeDTODisassembler;
 
-	@Autowired
-	private CadastroCidadeService cadastroCidade;
+	CidadeController(CidadeRepository cidadeRepository, CadastroCidadeService cadastroCidade,
+					 CidadeDTOAssembler cidadeDTOAssembler, CidadeDTODisassembler cidadeDTODisassemble) {
+		this.cadastroCidade = cadastroCidade;
+		this.cidadeDTOAssembler = cidadeDTOAssembler;
+		this.cidadeRepository = cidadeRepository;
+		this.cidadeDTODisassembler = cidadeDTODisassemble;
+	}
 
-	@Autowired
-	private CidadeDTOAssembler cidadeDTOAssembler;
-
-	@Autowired
-	private CidadeDTODisassembler cidadeDTODisassembler;
-
-	@ApiOperation("Lista as cidades")
+	@Override
 	@GetMapping
 	public List<Cidade> listar() {
 		return cidadeRepository.findAll();
 	}
 
-	@ApiOperation("Busca cidade por id")
+	@Override
 	@GetMapping("/{cidadeId}")
-	@ApiResponses({
-			@ApiResponse(code = 400, message = "Id da cidade inválido", response = Problem.class),
-			@ApiResponse(code = 404, message = "Cidade Não encontrada", response = Problem.class)
-	})
-	// @ApiParam: Atencao quando for um tipo inteiro, colocar um exemplo pra não dar excecao,
-	// talvez tenha que fazer isso pra String também, quando é um objeto nao precisa
-	public CidadeDTO buscar(@ApiParam(value = "Id de uma cidade", example = "1") @PathVariable Long cidadeId) {
+	public CidadeDTO buscar(@PathVariable Long cidadeId) {
 		return cidadeDTOAssembler.toDTO(cadastroCidade.buscarOuFalhar(cidadeId));
 	}
 
-	@ApiOperation("Cria uma cidade")
+	@Override
 	@PostMapping
 	@ResponseStatus(value = CREATED)
-	@ApiResponses({
-			// aqui podemos emitir o response, o spring fox já sabe que por retornar uma objeto cidade dto, esse será o tipo à representar no response
-			@ApiResponse(code = 201, message = "Cidade criada"),
-	})
 	public CidadeDTO adicionar(
-			@ApiParam(name = "corpo", value = "Representação de uma cidade com os novos dados")
 			@Valid @RequestBody CidadeInputDTO cidadeInputDTO) {
 		Cidade cidade = cidadeDTODisassembler.toDomainObject(cidadeInputDTO);
 		try {
@@ -84,15 +75,9 @@ public class CidadeController {
 		return cidadeDTOAssembler.toDTO(cadastroCidade.salvar(cidade));
 	}
 
-	@ApiOperation("Atualiza uma cidade existente")
+	@Override
 	@PutMapping("/{cidadeId}")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "CidadeAtualizada"),
-			@ApiResponse(code = 404, message = "Cidade Não encontrada", response = Problem.class)
-	})
-	public CidadeDTO atualizar(@ApiParam(value = "Id de uma cidade", example = "1") @PathVariable Long cidadeId,
-							   @ApiParam(name = "corpo", value = "Representação de uma cidade com os novos dados")
-							   @Valid @RequestBody CidadeInputDTO cidadeInputDTO) {
+	public CidadeDTO atualizar(@PathVariable Long cidadeId, @Valid @RequestBody CidadeInputDTO cidadeInputDTO) {
 		Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(cidadeId);
 		cidadeDTODisassembler.copyToDomainObject(cidadeInputDTO, cidadeAtual);
 		try {
@@ -103,15 +88,10 @@ public class CidadeController {
 		return cidadeDTOAssembler.toDTO(cidadeAtual);
 	}
 
-	@ApiOperation("Exclui uma cidade")
+	@Override
 	@ResponseStatus(NO_CONTENT)
 	@DeleteMapping("/{cidadeId}")
-	@ApiResponses({
-			@ApiResponse(code = 204, message = "Cidade Excluída"),
-			@ApiResponse(code = 404, message = "Cidade Não encontrada", response = Problem.class)
-	})
-	public void remover(@ApiParam(value = "Id de uma cidade", example = "1")
-							@PathVariable Long cidadeId) {
+	public void remover(@PathVariable Long cidadeId) {
 		cadastroCidade.excluir(cidadeId);
 	}
 }
