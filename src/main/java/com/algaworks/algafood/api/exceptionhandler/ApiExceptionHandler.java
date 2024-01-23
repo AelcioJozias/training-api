@@ -110,10 +110,24 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
 
+  /**
+   * exemplo de como tratar parâmetros com a tipagem incorreta que vem na requisicao
+   *
+   * @param ex exception
+   * @param headers the https headers
+   * @param status object response status
+   * @param request the current request
+   * @return Response entity, with his treatment necessary to the exception in context.
+   */
   @Override
   protected ResponseEntity<Object> handleTypeMismatch(
       TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
+    /*
+    * Aqui nesse cast é o seguinte. Existem muitas excecoes que extendem a TypeMismatchException.
+    * Porém, a que indetifica erro de parametro inválidos, por exemplo, uma 'string', 'a' para um tipo 'Long', é essa instância.
+    * Caso diferente, o código segue fluxo para uma tratativa genêrica
+    * */
     if (ex instanceof MethodArgumentTypeMismatchException) {
       return handleMethodArgumentTypeMismatchException(
           (MethodArgumentTypeMismatchException) ex, headers, status, request);
