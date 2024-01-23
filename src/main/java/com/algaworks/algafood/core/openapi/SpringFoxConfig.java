@@ -1,5 +1,7 @@
 package com.algaworks.algafood.core.openapi;
 
+import com.algaworks.algafood.api.exceptionhandler.Problem;
+import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -42,20 +44,32 @@ public class SpringFoxConfig implements WebMvcConfigurer {
      */
     @Bean
     public Docket apiDocket() {
+        // instancia do objeto que vai resolver o tipo que queromos adicionar ao model do swagger
+        TypeResolver typeResolver = new TypeResolver();
+
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 // indica quais endpoins dever sem documentados
                 .apis(RequestHandlerSelectors.basePackage("com.algaworks.algafood.api"))
-                .paths(PathSelectors.any()) // -> esse já o valor padrão, está aqui apenas para referência
-                // no exemplo abaixo pegaria apenas os endpoints que começacem com restaurantes
-                //.paths(PathSelectors.regex("/restaurantes"))
+                .paths(PathSelectors.any()) /* -> esse já o valor padrão, está aqui apenas para referência
+                 no exemplo abaixo pegaria apenas os endpoints que começacem com restaurantes
+                .paths(PathSelectors.regex("/restaurantes")). */
                 .build()
+
+                // adiciona um model no doc
+                .additionalModels(typeResolver.resolve(Problem.class))
+
+                // instancia dos status code globais
                 .useDefaultResponseMessages(false)
                 .globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
                 .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
                 .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
                 .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
+
+                // tags
                 .tags(new Tag("Cidade", "Gerencias as cidades"))
+
+                //informacoes da api
                 .apiInfo(apiInfo());
     }
     private List<ResponseMessage> globalGetResponseMessages() {
