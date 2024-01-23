@@ -69,6 +69,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 
                 // tags
                 .tags(new Tag("Cidade", "Gerencias as cidades"))
+                .tags((new Tag("Grupos", "Gerencia os grupos de usuários")))
 
                 //informacoes da api
                 .apiInfo(apiInfo());

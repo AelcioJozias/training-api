@@ -25,7 +25,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/grupos")
-public class GrupoController {
+public class GrupoController implements com.algaworks.algafood.api.controller.openapi.GrupoControllerOpenapi {
 
   @Autowired
   CadastroGrupoService cadastroGrupoService;
@@ -33,29 +33,34 @@ public class GrupoController {
   @Autowired 
   GrupoDTODisassembler disassembler;
 
+  @Override
   @GetMapping("/{id}")
   public GrupoDTO pesquisar(@PathVariable Long id){
     return cadastroGrupoService.buscarGrupoDTO(id);
   }
 
+  @Override
   @GetMapping
   public List<GrupoDTO> listar(){
     return cadastroGrupoService.listar();
   }
 
+  @Override
   @ResponseStatus(value = HttpStatus.CREATED)
   @PostMapping
   public GrupoDTO salvar(@Valid @RequestBody GrupoInputDTO grupoInputDTO) {
       return cadastroGrupoService.salvarGrupoDTO(grupoInputDTO);
   }
 
+  @Override
   @PutMapping(value = "/{id}")
-  public GrupoDTO atualizar( @RequestBody @Valid GrupoInputDTO grupoInputDTO, @PathVariable Long id){
+  public GrupoDTO atualizar(@RequestBody @Valid GrupoInputDTO grupoInputDTO, @PathVariable Long id){
     Grupo grupoAtual = cadastroGrupoService.buscarOuFalhar(id);
     BeanUtils.copyProperties(grupoInputDTO, grupoAtual);
     return cadastroGrupoService.salvarGrupoDTO(grupoInputDTO);
   }
 
+  @Override
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   @DeleteMapping("/{id}")
   public void excluir(@PathVariable Long id) {
