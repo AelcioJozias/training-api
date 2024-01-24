@@ -1,10 +1,12 @@
 package com.algaworks.algafood.core.openapi;
 
+import com.algaworks.algafood.api.controller.openapi.model.PageableModelApi;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -66,6 +68,9 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
                 .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
                 .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
+
+                // substitui o objeto pageable pelo pageable model api, que é apenas o resumo do necessário para a documentacão.
+                .directModelSubstitute(Pageable.class, PageableModelApi.class)
 
                 // tags
                 .tags(new Tag("Cidade", "Gerencias as cidades"))
