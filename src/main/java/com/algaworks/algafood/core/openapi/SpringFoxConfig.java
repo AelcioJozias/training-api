@@ -1,11 +1,14 @@
 package com.algaworks.algafood.core.openapi;
 
-import com.algaworks.algafood.openapi.model.PageableModelApi;
+import com.algaworks.algafood.api.dto.CozinhaDTO;
+import com.algaworks.algafood.openapi.dto.CozinhasDtoOpenApi;
+import com.algaworks.algafood.openapi.dto.PageableDtoOpenApi;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +19,7 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
+import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -62,6 +66,18 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 // adiciona um model no doc
                 .additionalModels(typeResolver.resolve(Problem.class))
 
+                /*
+                 * Vamos desmabrar esse metodo.
+                 * alternateTypeRules -> vai adicionar uma nova regra de substituição
+                 * AlternateTypeRules.newRule -> vai explicitar a regra, vou querer trocar um page<Cozinha> ->
+                 * pelo objeto CozinhaDTOOpenApi
+                 */
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(Page.class, CozinhaDTO.class),
+                        CozinhasDtoOpenApi.class
+                ))
+
+
                 // instancia dos status code globais
                 .useDefaultResponseMessages(false)
                 .globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
@@ -69,10 +85,9 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
                 .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
 
-//                .alternateTypeRules(typeResolver.resolveSubtype(Problem))
 
                 // substitui o objeto pageable pelo pageable model api, que é apenas o resumo do necessário para a documentacão. Isso nos parâmetros de entrada apenas... 
-                .directModelSubstitute(Pageable.class, PageableModelApi.class)
+                .directModelSubstitute(Pageable.class, PageableDtoOpenApi.class)
                 .alternateTypeRules()
                 // tags
                 .tags(new Tag("Cidade", "Gerencias as cidades"))
