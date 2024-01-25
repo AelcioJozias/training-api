@@ -7,10 +7,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.algaworks.algafood.api.controller.openapi.CidadeControllerOpenApi;
-import com.algaworks.algafood.api.exceptionhandler.Problem;
+import com.algaworks.algafood.openapi.controller.CidadeControllerOpenApi;
 import io.swagger.annotations.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

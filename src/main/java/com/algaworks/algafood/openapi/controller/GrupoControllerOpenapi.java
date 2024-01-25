@@ -1,4 +1,4 @@
-package com.algaworks.algafood.api.controller.openapi;
+package com.algaworks.algafood.openapi.controller;
 
 import com.algaworks.algafood.api.dto.GrupoDTO;
 import com.algaworks.algafood.api.dto.input.GrupoInputDTO;

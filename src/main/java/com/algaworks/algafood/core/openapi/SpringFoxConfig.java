@@ -1,6 +1,6 @@
 package com.algaworks.algafood.core.openapi;
 
-import com.algaworks.algafood.api.controller.openapi.model.PageableModelApi;
+import com.algaworks.algafood.openapi.model.PageableModelApi;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
@@ -69,9 +69,11 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
                 .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
 
-                // substitui o objeto pageable pelo pageable model api, que é apenas o resumo do necessário para a documentacão.
-                .directModelSubstitute(Pageable.class, PageableModelApi.class)
+//                .alternateTypeRules(typeResolver.resolveSubtype(Problem))
 
+                // substitui o objeto pageable pelo pageable model api, que é apenas o resumo do necessário para a documentacão. Isso nos parâmetros de entrada apenas... 
+                .directModelSubstitute(Pageable.class, PageableModelApi.class)
+                .alternateTypeRules()
                 // tags
                 .tags(new Tag("Cidade", "Gerencias as cidades"))
                 .tags((new Tag("Grupos", "Gerencia os grupos de usuários")))

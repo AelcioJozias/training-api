@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.controller;
 
 import java.util.List;
 
+import com.algaworks.algafood.openapi.controller.GrupoControllerOpenapi;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/grupos", produces = MediaType.APPLICATION_JSON_VALUE)
-public class GrupoController implements com.algaworks.algafood.api.controller.openapi.GrupoControllerOpenapi {
+public class GrupoController implements GrupoControllerOpenapi {
 
   @Autowired
   CadastroGrupoService cadastroGrupoService;
