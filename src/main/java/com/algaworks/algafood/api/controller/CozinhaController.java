@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,9 +29,10 @@ import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 
+@Api(tags = "Cozinhas")
 @RestController
 @RequestMapping(value = "/cozinhas")
-public class CozinhaController {
+public class CozinhaController implements com.algaworks.algafood.openapi.controller.CozinhaControllerOpenApi {
 
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
@@ -44,6 +46,7 @@ public class CozinhaController {
   @Autowired
   CozinhaDTODisassembler cozinhaDTODisassembler;
 
+	@Override
 	@GetMapping
 	public Page<CozinhaDTO> listar(@PageableDefault(size = 10) Pageable pageable) {
 		Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
@@ -52,25 +55,29 @@ public class CozinhaController {
 				cozinhasPage.getTotalElements());
 	}
 
+	@Override
 	@GetMapping("/{cozinhaId}")
 	public CozinhaDTO buscar(@PathVariable Long cozinhaId) {
 		return cozinhaDTOAssembler.toDTO(cadastroCozinha.buscarOuFalhar(cozinhaId));
 	}
 
+	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CozinhaDTO adicionar(@Valid @RequestBody CozinhaDTO cozinhaDTO) {
 		return cozinhaDTOAssembler.toDTO(cadastroCozinha.salvar(cozinhaDTODisassembler.toDomainObject(cozinhaDTO)));
 	}
 
+	@Override
 	@PutMapping("/{cozinhaId}")
 	public CozinhaDTO atualizar(@PathVariable Long cozinhaId,
-			@Valid @RequestBody CozinhaDTO cozinhaDTO) {
+								@Valid @RequestBody CozinhaDTO cozinhaDTO) {
 		Cozinha cozinhaAtual = cadastroCozinha.buscarOuFalhar(cozinhaId);
 		BeanUtils.copyProperties(cozinhaDTODisassembler.toDomainObject(cozinhaDTO) , cozinhaAtual, "id");
 		return cozinhaDTOAssembler.toDTO(cadastroCozinha.salvar(cozinhaAtual));
 	}
 
+	@Override
 	@DeleteMapping("/{cozinhaId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long cozinhaId) {

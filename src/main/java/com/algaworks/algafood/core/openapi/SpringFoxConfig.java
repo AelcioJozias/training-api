@@ -63,8 +63,18 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .paths(PathSelectors.regex("/restaurantes")). */
                 .build()
 
+                // instancia dos status code globais
+                .useDefaultResponseMessages(false)
+                .globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
+                .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
+                .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
+                .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
+
                 // adiciona um model no doc
                 .additionalModels(typeResolver.resolve(Problem.class))
+
+                // substitui o objeto pageable pelo pageable model api, que é apenas o resumo do necessário para a documentacão. Isso nos parâmetros de entrada apenas...
+                .directModelSubstitute(Pageable.class, PageableDtoOpenApi.class)
 
                 /*
                  * Vamos desmabrar esse metodo.
@@ -76,22 +86,10 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                         typeResolver.resolve(Page.class, CozinhaDTO.class),
                         CozinhasDtoOpenApi.class
                 ))
-
-
-                // instancia dos status code globais
-                .useDefaultResponseMessages(false)
-                .globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
-                .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
-                .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
-                .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
-
-
-                // substitui o objeto pageable pelo pageable model api, que é apenas o resumo do necessário para a documentacão. Isso nos parâmetros de entrada apenas... 
-                .directModelSubstitute(Pageable.class, PageableDtoOpenApi.class)
-                .alternateTypeRules()
                 // tags
                 .tags(new Tag("Cidade", "Gerencias as cidades"))
                 .tags((new Tag("Grupos", "Gerencia os grupos de usuários")))
+                .tags((new Tag("Cozinhas", "Gerencia as cozinhas")))
 
                 //informacoes da api
                 .apiInfo(apiInfo());
