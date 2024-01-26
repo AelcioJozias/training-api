@@ -7,18 +7,17 @@ import com.algaworks.algafood.domain.service.CadastroFormaPagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.ServletWebRequest;
-import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 import javax.validation.Valid;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @RestController
-@RequestMapping(value = "/formas-pagamento")
+@RequestMapping(value = "/formas-pagamento", produces = MediaType.APPLICATION_JSON_VALUE)
 public class FormaPagamentoController {
 
     @Autowired
@@ -41,7 +40,6 @@ public class FormaPagamentoController {
     }
 
     @GetMapping
-                                                                            //injecao do serlet request
     public ResponseEntity<List<FormaPagamentoDTO>> listarFormasPagamento(ServletWebRequest request) {
         String eTag = cadastroFormaPagamentoService.genereteEtag(request);
 
@@ -66,7 +64,7 @@ public class FormaPagamentoController {
     }
 
     @PutMapping(value = "/{id}")
-    public FormaPagamentoDTO buscarPorId(@PathVariable Long id, @RequestBody FormaPagamentoInputDTO formaPagamentoInputDTO) {
+    public FormaPagamentoDTO atualizar(@PathVariable Long id, @RequestBody FormaPagamentoInputDTO formaPagamentoInputDTO) {
         return cadastroFormaPagamentoService.atualizarRecursoCompleto(id, formaPagamentoInputDTO);
     }
 

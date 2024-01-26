@@ -1,9 +1,9 @@
 package com.algaworks.algafood.core.openapi;
 
 import com.algaworks.algafood.api.dto.CozinhaDTO;
+import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.algaworks.algafood.openapi.dto.CozinhasDtoOpenApi;
 import com.algaworks.algafood.openapi.dto.PageableDtoOpenApi;
-import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
@@ -69,6 +70,10 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
                 .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
                 .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
+
+                // ignora todos os parametros que herdam o tipo servletRequest.class, como por exemplo no endpoint
+                // de buscar forma de pagamento por id
+                .ignoredParameterTypes(ServletWebRequest.class)
 
                 // adiciona um model no doc
                 .additionalModels(typeResolver.resolve(Problem.class))
