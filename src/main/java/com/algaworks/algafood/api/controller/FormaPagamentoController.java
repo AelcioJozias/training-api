@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "/formas-pagamento", produces = MediaType.APPLICATION_JSON_VALUE)
-public class FormaPagamentoController {
+public class FormaPagamentoController implements com.algaworks.algafood.openapi.controller.FormaPagamentoControllerOpenApi {
 
     @Autowired
     CadastroFormaPagamentoService cadastroFormaPagamentoService;
@@ -26,6 +26,7 @@ public class FormaPagamentoController {
     @Autowired
     FormaPagamentoRepository formaPagamentoRepository;
 
+    @Override
     @GetMapping(value = "/{id}")
     public ResponseEntity<FormaPagamentoDTO> buscarPorId(@PathVariable Long id, ServletWebRequest request) {
         String eTag = cadastroFormaPagamentoService.genereteEtag(request);
@@ -39,6 +40,7 @@ public class FormaPagamentoController {
                 .body(formaPagamento);
     }
 
+    @Override
     @GetMapping
     public ResponseEntity<List<FormaPagamentoDTO>> listarFormasPagamento(ServletWebRequest request) {
         String eTag = cadastroFormaPagamentoService.genereteEtag(request);
@@ -58,16 +60,19 @@ public class FormaPagamentoController {
                 .body(formasPagamento);
     }
 
+    @Override
     @PostMapping @ResponseStatus(HttpStatus.CREATED)
     public FormaPagamentoDTO salvar(@Valid @RequestBody FormaPagamentoInputDTO formaPagamentoInputDTO) {
         return cadastroFormaPagamentoService.salvar(formaPagamentoInputDTO);
     }
 
+    @Override
     @PutMapping(value = "/{id}")
     public FormaPagamentoDTO atualizar(@PathVariable Long id, @RequestBody FormaPagamentoInputDTO formaPagamentoInputDTO) {
         return cadastroFormaPagamentoService.atualizarRecursoCompleto(id, formaPagamentoInputDTO);
     }
 
+    @Override
     @DeleteMapping(value = "/{id}") @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluir(@PathVariable Long id) {
         cadastroFormaPagamentoService.excluir(id);

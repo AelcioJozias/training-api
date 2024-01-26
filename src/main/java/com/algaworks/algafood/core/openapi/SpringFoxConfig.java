@@ -44,8 +44,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 
 
     /**
-     * instância para ativar o SpringFox.
-     * Docket é uma classe do spring fox que representa a configuração da api para gerar a definição
+     * Instância para ativar o SpringFox.
+     * Docket é uma classe do spring-fox que representa a configuração da api para gerar a definição
      * usando a especicação open Api.
      * Esse docket irá estabelecer o conjutno de servicos que devem ser documentados.
      * @return new Docket com as configurações estabelecidas
@@ -95,6 +95,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .tags(new Tag("Cidade", "Gerencias as cidades"))
                 .tags((new Tag("Grupos", "Gerencia os grupos de usuários")))
                 .tags((new Tag("Cozinhas", "Gerencia as cozinhas")))
+                .tags((new Tag("Formas de pagamento", "Gerencia as formas de pagamento do restaurante")))
 
                 //informacoes da api
                 .apiInfo(apiInfo());
