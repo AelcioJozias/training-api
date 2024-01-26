@@ -5,6 +5,7 @@ import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.algaworks.algafood.openapi.dto.CozinhasDtoOpenApi;
 import com.algaworks.algafood.openapi.dto.PageableDtoOpenApi;
 import com.fasterxml.classmate.TypeResolver;
+import org.apache.commons.collections.ArrayStack;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -16,21 +17,16 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.builders.ResponseMessageBuilder;
+import springfox.documentation.builders.*;
 import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.schema.ModelRef;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.service.ResponseMessage;
-import springfox.documentation.service.Tag;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -91,6 +87,17 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                         typeResolver.resolve(Page.class, CozinhaDTO.class),
                         CozinhasDtoOpenApi.class
                 ))
+
+                // exemplo de como registar um parameter de entrada global para todos os endpoints
+                .globalOperationParameters(Collections.singletonList(
+                        new ParameterBuilder()
+                                .name("campos")
+                                .description("nome das propriedades para filtrar nas respostas, separar por vírgula")
+                                .parameterType("query")
+                                .modelRef(new ModelRef("string"))
+                                .build()
+                ))
+
                 // tags
                 .tags(new Tag("Cidade", "Gerencias as cidades"))
                 .tags((new Tag("Grupos", "Gerencia os grupos de usuários")))
