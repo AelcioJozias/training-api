@@ -89,14 +89,14 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 ))
 
                 // exemplo de como registar um parameter de entrada global para todos os endpoints
-                .globalOperationParameters(Collections.singletonList(
-                        new ParameterBuilder()
-                                .name("campos")
-                                .description("nome das propriedades para filtrar nas respostas, separar por vírgula")
-                                .parameterType("query")
-                                .modelRef(new ModelRef("string"))
-                                .build()
-                ))
+//                .globalOperationParameters(Collections.singletonList(
+//                        new ParameterBuilder()
+//                                .name("campos")
+//                                .description("nome das propriedades para filtrar nas respostas, separar por vírgula")
+//                                .parameterType("query")
+//                                .modelRef(new ModelRef("string"))
+//                                .build()
+//                ))
 
                 // tags
                 .tags(new Tag("Cidade", "Gerencias as cidades"))

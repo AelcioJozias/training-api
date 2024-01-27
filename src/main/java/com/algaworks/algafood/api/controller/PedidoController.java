@@ -14,6 +14,8 @@ import com.algaworks.algafood.domain.repository.PedidoRepository;
 import com.algaworks.algafood.domain.service.EmissaoPedidoService;
 import com.algaworks.algafood.infrastructure.repository.spec.PedidosSpecs;
 import com.google.common.collect.ImmutableMap;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,6 +46,11 @@ public class PedidoController {
     PedidoInputDisassembler pedidoInputDisassembler;
 
     @GetMapping
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "campos", paramType = "query", type = "string",
+                    value = "nome das propriedades para filtrar nas respostas, separar por vírgula"
+            )
+    })
     public Page<PedidoResumoDTO> pesquisar(PedidoFilter pedidoFilter, @PageableDefault(size = 10) Pageable pageable) {
         pageable = traduzirPageable(pageable);
             Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidosSpecs.usandoFiltro(pedidoFilter), pageable);
