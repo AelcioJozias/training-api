@@ -13,22 +13,21 @@ import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.PedidoRepository;
 import com.algaworks.algafood.domain.service.EmissaoPedidoService;
 import com.algaworks.algafood.infrastructure.repository.spec.PedidosSpecs;
+import com.algaworks.algafood.openapi.controller.PedidoControllerOpenApi;
 import com.google.common.collect.ImmutableMap;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/pedidos")
-public class PedidoController {
+@RequestMapping(value = "/pedidos", produces = MediaType.APPLICATION_JSON_VALUE)
+public class PedidoController implements PedidoControllerOpenApi {
 
     @Autowired
     private PedidoRepository pedidoRepository;
@@ -45,12 +44,8 @@ public class PedidoController {
     @Autowired
     PedidoInputDisassembler pedidoInputDisassembler;
 
+    @Override
     @GetMapping
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "campos", paramType = "query", type = "string",
-                    value = "nome das propriedades para filtrar nas respostas, separar por vírgula"
-            )
-    })
     public Page<PedidoResumoDTO> pesquisar(PedidoFilter pedidoFilter, @PageableDefault(size = 10) Pageable pageable) {
         pageable = traduzirPageable(pageable);
             Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidosSpecs.usandoFiltro(pedidoFilter), pageable);
@@ -58,12 +53,14 @@ public class PedidoController {
         return new PageImpl<>(pedidoDTO, pageable, pedidosPage.getTotalElements());
     }
 
+    @Override
     @GetMapping("/{codigoPedido}")
     public PedidoDTO buscar(@PathVariable String codigoPedido) {
         Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
         return pedidoModelAssembler.toDTO(pedido);
     }
 
+    @Override
     @PostMapping
     public PedidoDTO emitirPedido(@RequestBody PedidoInput pedidoInput) {
 
@@ -75,9 +72,6 @@ public class PedidoController {
         return pedidoModelAssembler.toDTO(pedido);
     }
 
-    /*
-    * esse translate foi feita para traduzir as propriedades que o usuário passa na api como params para ordernacao
-    */
     private Pageable traduzirPageable(Pageable apiPageable) {
         var mapeamento = ImmutableMap.of(
                 "codigo", "codigo",
@@ -88,5 +82,4 @@ public class PedidoController {
 
         return PageableTranslator.translate(apiPageable, mapeamento);
     }
-
 }

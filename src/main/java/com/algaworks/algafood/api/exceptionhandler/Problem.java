@@ -45,10 +45,10 @@ public class Problem {
   @Builder
   public static class Object {
 
-    @ApiModelProperty(example = "preço", position = 5)
+    @ApiModelProperty(example = "campoX", position = 5)
     private String name;
 
-    @ApiModelProperty(example = "O preço é obrigatório", position = 10)
+    @ApiModelProperty(example = "O campoX é obrigatório", position = 10)
     private String userMessage;
   }
 
