@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface PedidoControllerOpenApi {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "campos", paramType = "query", type = "string",
-                    value = "nome das propriedades para filtrar nas respostas, separar por vírgula"
+                    value = "nome das propriedades para filtrar nas respostas, separar por vírgula",
+                    example = "cliente.nome"
             )
     })
     @ApiResponses({
