@@ -25,10 +25,11 @@ import com.algaworks.algafood.api.dto.input.EstadoInputDTO;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.repository.EstadoRepository;
 import com.algaworks.algafood.domain.service.CadastroEstadoService;
+import com.algaworks.algafood.openapi.controller.EstadoControllerOpenApi;
 
 @RestController
 @RequestMapping("/estados")
-public class EstadoController {
+public class EstadoController implements EstadoControllerOpenApi {
 
 	@Autowired
 	private EstadoDTOAssembler estadoDTOAssembler;
@@ -42,30 +43,35 @@ public class EstadoController {
 	@Autowired
 	private CadastroEstadoService cadastroEstado;
 
-	@GetMapping
+	@Override
+  @GetMapping
 	public List<EstadoDTO> listar() {
 		return estadoDTOAssembler.toCollectionDTO(estadoRepository.findAll());
 	}
 
-	@GetMapping("/{estadoId}")
+	@Override
+  @GetMapping("/{estadoId}")
 	public Estado buscar(@PathVariable Long estadoId) {
 		return cadastroEstado.buscarOuFalhar(estadoId);
 	}
 
-	@PostMapping
+	@Override
+  @PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public EstadoDTO adicionar(@Valid @RequestBody EstadoInputDTO estadoInputDTO) {
 		return estadoDTOAssembler.toDTO(cadastroEstado.salvar(estadoDTODisassembler.toDomainObject(estadoInputDTO)));
 	}
 
-	@PutMapping("/{estadoId}")
+	@Override
+  @PutMapping("/{estadoId}")
 	public Estado atualizar(@PathVariable Long estadoId, @Valid @RequestBody EstadoInputDTO estadoInputDTO) {
 		Estado estadoAtual = cadastroEstado.buscarOuFalhar(estadoId);
 		estadoDTODisassembler.copyToDomainObject(estadoInputDTO, estadoAtual);
 		return cadastroEstado.salvar(estadoAtual);
 	}
 
-	@ResponseStatus(NO_CONTENT)
+	@Override
+  @ResponseStatus(NO_CONTENT)
 	@DeleteMapping("/{estadoId}")
 	public void remover(@PathVariable Long estadoId) {
 		cadastroEstado.excluir(estadoId);

@@ -116,6 +116,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .tags((new Tag("Formas de pagamento", "Gerencia as formas de pagamento do restaurante")))
                 .tags((new Tag("Pedidos", "Gerencia os pedidos")))
                 .tags((new Tag("Restaurantes", "Gerencia os restaurantes")))
+                .tags((new Tag("Estados", "Gerencia os estados")))
 
                 //informacoes da api
                 .apiInfo(apiInfo());
