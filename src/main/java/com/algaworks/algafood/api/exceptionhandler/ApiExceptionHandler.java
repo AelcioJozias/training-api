@@ -63,6 +63,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     return ResponseEntity.status(status).headers(headers).build();
   }
 
+
+  // -----------------------------------------------------------------
+  // esse bloco com 3 exceções, lida com bindExceptions
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -86,8 +89,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
           String name = objectError.getObjectName();
 
-          /* aqui estou verificando que não é um erro de objeto, mas sim um field do objeto, é que em algumas situações
-          * o erro pode ser o objeto, só que agora de cabeça, não me lembro um exemplo
+          /* as vezes o erro será em um field e não em um objeto, por isso esse casta para pegar o nome do field apenas
           * */
           if (objectError instanceof FieldError) {
             name = ((FieldError) objectError).getField();
@@ -109,9 +111,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
+  // -----------------------------------------------------------------
 
   /**
-   * exemplo de como tratar parâmetros com a tipagem incorreta que vem na requisicao
+   * Trata parâmetros com a tipagem incorreta na url
    *
    * @param ex exception
    * @param headers the https headers
@@ -135,6 +138,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     return handleExceptionInternal(ex, null, headers, status, request);
   }
 
+  /**
+   * Trata quando não o endpoint solicitado não é encontrado
+   * @param ex the exception
+   * @param headers the headers to be written to the response
+   * @param status the selected response status
+   * @param request the current request
+   * @return
+   */
   @Override
   protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
@@ -146,6 +157,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
 
+  /**
+   * Trata exception geradas por passar um valor inválido no parâmetro de url
+   * @param ex
+   * @param headers
+   * @param status
+   * @param request
+   * @return
+   */
   private ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
 
@@ -164,6 +183,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     return handleExceptionInternal(ex, corpoDaMessagem, headers, status, request);
   }
 
+  /**
+   * Trata parâmetros inválidos enviados para Api
+   * ex: mandar uma String para um tipo Double, uma vírgula a mais solta no json ou quando é passada no corpo
+   * uma propriedade que não existe no objeto. O útimo caso acontece, porque nessa api foi configurada
+   * para lançar um erro se passado uma propriedade inexistente.
+   *
+   * @param exception the exception
+   * @param headers the headers to be written to the response
+   * @param status the selected response status
+   * @param request the current request
+   * @return
+   */
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException exception,
       HttpHeaders headers,
@@ -265,7 +296,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
           .userMassege(MSG_ERRO_GENERICA_USUARIO_FINAL)
           .title(status.getReasonPhrase())
           .status(status.value())
-
           .build();
     } else if (body instanceof String) {
       body = Problem.builder()
