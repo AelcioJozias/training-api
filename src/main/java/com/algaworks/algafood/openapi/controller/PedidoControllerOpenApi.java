@@ -1,20 +1,21 @@
 package com.algaworks.algafood.openapi.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.algaworks.algafood.api.dto.PedidoDTO;
 import com.algaworks.algafood.api.dto.PedidoResumoDTO;
 import com.algaworks.algafood.api.dto.input.PedidoInput;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
-import com.algaworks.algafood.core.data.PageableTranslator;
 import com.algaworks.algafood.domain.filter.PedidoFilter;
-import com.google.common.collect.ImmutableMap;
-import io.swagger.annotations.*;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Api(tags = "Pedidos")
 public interface PedidoControllerOpenApi {

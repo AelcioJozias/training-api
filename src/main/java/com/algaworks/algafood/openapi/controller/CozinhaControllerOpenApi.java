@@ -1,15 +1,15 @@
 package com.algaworks.algafood.openapi.controller;
 
-import com.algaworks.algafood.api.dto.CozinhaDTO;
-import com.algaworks.algafood.api.exceptionhandler.Problem;
-import io.swagger.annotations.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import com.algaworks.algafood.api.dto.CozinhaDTO;
+import com.algaworks.algafood.api.exceptionhandler.Problem;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @ApiModel
 public interface CozinhaControllerOpenApi {

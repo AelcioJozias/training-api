@@ -1,11 +1,13 @@
 package com.algaworks.algafood.domain.service;
 
-import lombok.*;
-
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.Singular;
 
 public interface EnvioEmailService {
 
@@ -19,7 +21,7 @@ public interface EnvioEmailService {
         // adicionar como se fosse um add do set ou array para não precisar instanciar uma lista se quiser passar apenas um destinario
         @NonNull
         @Singular
-        private Set<String> destinatarios = new HashSet<>();
+        private Set<String> destinatarios;
 
         // se não for passado um valor na instanciacao, será jogada uma exception
         @NonNull
@@ -29,7 +31,7 @@ public interface EnvioEmailService {
         private String corpo;
 
         @Singular(value = "variavel")
-        Map<String, Object> variaveis = new HashMap<>();
+        Map<String, Object> variaveis;
     }
 
 
